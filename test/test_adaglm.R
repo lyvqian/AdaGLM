@@ -10,20 +10,17 @@ beta_adam <- adaglm(X,y,fam_link = "binomial_logit", optimizer = "ADAM")
 mse_adam <- mse(beta_adam$coefficients, true_beta)
 mse_adam
 
-beta_adam <- adaglm(X,y,fam_link = "binomial_logit", optimizer = "AdaGrad", learning_rate = 0.1)
+beta_adagrad <- adaglm(X,y,fam_link = "binomial_logit", optimizer = "AdaGrad")
+mse_adagrad <- mse(beta_adagrad$coefficients, true_beta)
+mse_adagrad
 
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
+beta_adadelta <- adaglm(X,y,fam_link = "binomial_logit", optimizer = "AdaDelta")
+mse_adadelta <- mse(beta_adadelta$coefficients, true_beta)
+mse_adadelta
 
-beta_adam <- adaglm(X,y,fam_link = "binomial_logit", optimizer = "AdaDelta")
-
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
-
-beta_adam <- adaglm(X,y,fam_link = "binomial_logit", optimizer = "AdaSmooth")
-
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
+beta_adasmooth <- adaglm(X,y,fam_link = "binomial_logit", optimizer = "AdaSmooth")
+mse_adasmooth <- mse(beta_adasmooth$coefficients, true_beta)
+mse_adasmooth
 
 X <- matrix(rnorm(n * p), nrow = n, ncol = p)
 true_beta <- c(runif(5, -0.5, 0.5), rep(0, p - 5))
@@ -35,20 +32,17 @@ beta_adam <- adaglm(X,y,fam_link = "poisson_log", optimizer = "ADAM")
 mse_adam <- mse(beta_adam$coefficients, true_beta)
 mse_adam
 
-beta_adam <- adaglm(X,y,fam_link = "poisson_log", optimizer = "AdaGrad", learning_rate = 0.1)
+beta_adagrad <- adaglm(X,y,fam_link = "poisson_log", optimizer = "AdaGrad")
+mse_adagrad <- mse(beta_adagrad$coefficients, true_beta)
+mse_adagrad
 
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
+beta_adadelta <- adaglm(X,y,fam_link = "poisson_log", optimizer = "AdaDelta")
+mse_adadelta <- mse(beta_adadelta$coefficients, true_beta)
+mse_adadelta
 
-beta_adam <- adaglm(X,y,fam_link = "poisson_log", optimizer = "AdaDelta")
-
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
-
-beta_adam <- adaglm(X,y,fam_link = "poisson_log", optimizer = "AdaSmooth")
-
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
+beta_adasmooth <- adaglm(X,y,fam_link = "poisson_log", optimizer = "AdaSmooth")
+mse_adasmooth <- mse(beta_adasmooth$coefficients, true_beta)
+mse_adasmooth
 
 
 X <- matrix(rnorm(n * p), nrow = n, ncol = p)
@@ -61,21 +55,17 @@ beta_adam <- adaglm(X,y,fam_link = "gaussian_identity", optimizer = "ADAM")
 mse_adam <- mse(beta_adam$coefficients, true_beta)
 mse_adam
 
-beta_adam <- adaglm(X,y,fam_link = "gaussian_identity", optimizer = "AdaGrad", learning_rate = 0.1)
+beta_adagrad <- adaglm(X,y,fam_link = "gaussian_identity", optimizer = "AdaGrad")
+mse_adagrad <- mse(beta_adagrad$coefficients, true_beta)
+mse_adagrad
 
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
+beta_adadelta <- adaglm(X,y,fam_link = "gaussian_identity", optimizer = "AdaDelta")
+mse_adadelta <- mse(beta_adadelta$coefficients, true_beta)
+mse_adadelta
 
-beta_adam <- adaglm(X,y,fam_link = "gaussian_identity", optimizer = "AdaDelta")
-
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
-
-beta_adam <- adaglm(X,y,fam_link = "gaussian_identity", optimizer = "AdaSmooth")
-
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
-
+beta_adasmooth <- adaglm(X,y,fam_link = "gaussian_identity", optimizer = "AdaSmooth")
+mse_adasmooth <- mse(beta_adasmooth$coefficients, true_beta)
+mse_adasmooth
 
 X <- matrix(rnorm(n * p), nrow = n, ncol = p)
 true_beta <- c(runif(5, -1, 1), rep(0, p - 5))
@@ -89,17 +79,15 @@ beta_adam <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "ADAM")
 mse_adam <- mse(beta_adam$coefficients, true_beta)
 mse_adam
 
-beta_adam <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaGrad", stepsize = 0.1)
+beta_adagrad <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaGrad", stepsize = 0.1)
+mse_adagrad <- mse(beta_adagrad$coefficients, true_beta)
+mse_adagrad
 
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
+beta_adadelta <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaDelta", stepsize = 0.1)
+mse_adadelta <- mse(beta_adadelta$coefficients, true_beta)
+mse_adadelta
 
-beta_adam <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaDelta", stepsize = 0.1)
-
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
-
-beta_adam <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaSmooth", stepsize = 0.0001)
-mse_adam <- mse(beta_adam$coefficients, true_beta)
-mse_adam
+beta_adasmooth <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaSmooth", stepsize = 0.0001)
+mse_adasmooth <- mse(beta_adasmooth$coefficients, true_beta)
+mse_adasmooth
 
