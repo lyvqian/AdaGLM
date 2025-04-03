@@ -17,6 +17,10 @@ adam_logistic <- function(X, y, alpha = 0.01, max_iter = 1000L, beta1 = 0.9, bet
     .Call(`_AdaptiveLearningRate_adam_logistic`, X, y, alpha, max_iter, beta1, beta2, epsilon)
 }
 
+adaglm <- function(X, y, fam_link, optimizer, alpha = 0.01, rho = 0.99, max_iter = 1000L, tol = 1e-6) {
+    .Call(`_AdaptiveLearningRate_adaglm`, X, y, fam_link, optimizer, alpha, rho, max_iter, tol)
+}
+
 irwls_logistic <- function(X, y, max_iter = 100L, tol = 1e-6) {
     .Call(`_AdaptiveLearningRate_irwls_logistic`, X, y, max_iter, tol)
 }

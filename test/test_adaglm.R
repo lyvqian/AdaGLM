@@ -1,3 +1,5 @@
+library(AdaptiveLearningRate)
+
 n <- 1000    
 p <- 50
 
@@ -5,6 +7,11 @@ X <- cbind(matrix(rnorm(n * p), n, p))
 true_beta <- c(rnorm(p))  
 prob <- 1 / (1 + exp(-X %*% true_beta))
 y <- rbinom(n, 1, prob)
+
+mse <- function(beta_est, beta_true) {
+  mean((beta_est - beta_true)^2)
+}
+
 
 beta_adam <- adaglm(X,y,fam_link = "binomial_logit", optimizer = "ADAM")
 mse_adam <- mse(beta_adam$coefficients, true_beta)
@@ -75,19 +82,19 @@ mu <- 1 / eta
 lambda <- 2
 y <- rgamma(n, shape = lambda, scale = mu / lambda)
 
-beta_adam <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "ADAM")
+beta_adam <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "ADAM", alpha = 0.001)
 mse_adam <- mse(beta_adam$coefficients, true_beta)
 mse_adam
 
-beta_adagrad <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaGrad", stepsize = 0.1)
+beta_adagrad <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaGrad", alpha = 0.001)
 mse_adagrad <- mse(beta_adagrad$coefficients, true_beta)
 mse_adagrad
 
-beta_adadelta <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaDelta", stepsize = 0.1)
+beta_adadelta <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaDelta", rho = 0.99)
 mse_adadelta <- mse(beta_adadelta$coefficients, true_beta)
 mse_adadelta
 
-beta_adasmooth <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaSmooth", stepsize = 0.0001)
+beta_adasmooth <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaSmooth", alpha = 0.0001)
 mse_adasmooth <- mse(beta_adasmooth$coefficients, true_beta)
 mse_adasmooth
 

@@ -15,13 +15,14 @@ Family* get_family(std::string fam_link) {
 
 // [[Rcpp::export]]
 List adaglm(const arma::mat& X, const arma::vec& y,
-                 std::string fam_link, std::string optimizer,
-                 double stepsize = 0.01, int max_iter = 1000, double tol = 1e-6) {
+            std::string fam_link, std::string optimizer,
+            double alpha = 0.01, double rho = 0.99, int max_iter = 1000, double tol = 1e-6) {
   
   Family* family = get_family(fam_link);
   
   OptimizerConfig cfg;
-  cfg.alpha = stepsize;
+  cfg.alpha = alpha;
+  cfg.rho = rho; 
   cfg.max_iter = max_iter;
   cfg.epsilon = tol;
   
