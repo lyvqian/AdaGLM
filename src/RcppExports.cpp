@@ -76,6 +76,34 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// LogLik
+double LogLik(const arma::mat& X, const arma::vec& y, std::string fam_link, const arma::vec& beta);
+RcppExport SEXP _AdaptiveLearningRate_LogLik(SEXP XSEXP, SEXP ySEXP, SEXP fam_linkSEXP, SEXP betaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< std::string >::type fam_link(fam_linkSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type beta(betaSEXP);
+    rcpp_result_gen = Rcpp::wrap(LogLik(X, y, fam_link, beta));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Deviance
+double Deviance(const arma::mat& X, const arma::vec& y, const arma::vec& beta, std::string fam_link);
+RcppExport SEXP _AdaptiveLearningRate_Deviance(SEXP XSEXP, SEXP ySEXP, SEXP betaSEXP, SEXP fam_linkSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< std::string >::type fam_link(fam_linkSEXP);
+    rcpp_result_gen = Rcpp::wrap(Deviance(X, y, beta, fam_link));
+    return rcpp_result_gen;
+END_RCPP
+}
 // adaglm
 List adaglm(const arma::mat& X, const arma::vec& y, std::string fam_link, std::string optimizer, double alpha, double rho, int max_iter, double tol);
 RcppExport SEXP _AdaptiveLearningRate_adaglm(SEXP XSEXP, SEXP ySEXP, SEXP fam_linkSEXP, SEXP optimizerSEXP, SEXP alphaSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP tolSEXP) {
@@ -114,6 +142,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_AdaptiveLearningRate_adagrad_logistic", (DL_FUNC) &_AdaptiveLearningRate_adagrad_logistic, 5},
     {"_AdaptiveLearningRate_adasmooth_logistic", (DL_FUNC) &_AdaptiveLearningRate_adasmooth_logistic, 8},
     {"_AdaptiveLearningRate_adam_logistic", (DL_FUNC) &_AdaptiveLearningRate_adam_logistic, 7},
+    {"_AdaptiveLearningRate_LogLik", (DL_FUNC) &_AdaptiveLearningRate_LogLik, 4},
+    {"_AdaptiveLearningRate_Deviance", (DL_FUNC) &_AdaptiveLearningRate_Deviance, 4},
     {"_AdaptiveLearningRate_adaglm", (DL_FUNC) &_AdaptiveLearningRate_adaglm, 8},
     {"_AdaptiveLearningRate_irwls_logistic", (DL_FUNC) &_AdaptiveLearningRate_irwls_logistic, 4},
     {NULL, NULL, 0}
