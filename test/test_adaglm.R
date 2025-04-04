@@ -89,27 +89,27 @@ mse_mat
 
 ## Gamma_inverse
 
-X <- matrix(rnorm(n * p), nrow = n, ncol = p)
-true_beta <- c(runif(5, -1, 1), rep(0, p - 5))
+X <- cbind(rep(1, n), matrix(rnorm(n * p), nrow = n, ncol = p))
+true_beta <- c(runif(6, -1, 1), rep(0, p - 5))
 eta <- X %*% true_beta
 eta <- pmax(eta, 1e-3)
 mu <- 1 / eta
 lambda <- 2
 y <- rgamma(n, shape = lambda, scale = mu / lambda)
 
-beta_adam <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "ADAM", alpha = 0.001)
+beta_adam <- adaglm(X,y,fam_link = "Gamma_log", optimizer = "ADAM", alpha = 0.001)
 mse_adam <- mse(beta_adam$coefficients, true_beta)
 
-beta_adagrad <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaGrad", alpha = 0.001)
+beta_adagrad <- adaglm(X,y,fam_link = "Gamma_log", optimizer = "AdaGrad", alpha = 0.001)
 mse_adagrad <- mse(beta_adagrad$coefficients, true_beta)
 
-beta_adadelta <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaDelta", rho = 0.99)
+beta_adadelta <- adaglm(X,y,fam_link = "Gamma_log", optimizer = "AdaDelta", rho = 0.99)
 mse_adadelta <- mse(beta_adadelta$coefficients, true_beta)
 
-beta_adasmooth <- adaglm(X,y,fam_link = "Gamma_inverse", optimizer = "AdaSmooth", alpha = 0.0001)
+beta_adasmooth <- adaglm(X,y,fam_link = "Gamma_log", optimizer = "AdaSmooth", alpha = 0.0001)
 mse_adasmooth <- mse(beta_adasmooth$coefficients, true_beta)
 
-gamma_inv_fit <- glm(y ~ X, family = Gamma(link = "inverse"))
+gamma_inv_fit <- glm(y ~ X[,2:51], family = Gamma(link = "log"))
 beta_glm <- coef(gamma_inv_fit)
 mse_glm <- mean((beta_glm - true_beta)^2)
 

@@ -10,13 +10,13 @@ X = air %>% mutate(intercept = rep(1,nrow(air))) %>%
   as.matrix
 y = air$Ozone
 
-beta_glm = summary(glm(y~X[,2:4], family = Gamma(link = "inverse")))$coef[,1]
+beta_glm = summary(glm(y~X[,2:4], family = Gamma(link = "log")))$coef[,1]
 
-family = "Gamma_inverse"
+family = "Gamma_log"
 bench <- suppressWarnings(microbenchmark(
-  beta_adam <- adaglm(X,y,fam_link = family, optimizer = "ADAM", alpha=0.0001),
-  beta_adagrad <- adaglm(X,y,fam_link = family, optimizer = "AdaGrad", alpha=0.0001),
-  beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta", rho=0.90),
+  beta_adam <- adaglm(X,y,fam_link = family, optimizer = "ADAM"),
+  beta_adagrad <- adaglm(X,y,fam_link = family, optimizer = "AdaGrad"),
+  beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta", alpha=0.99),
   beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.0001),
   beta_glm = summary(glm(y~X[,2:4], family = Gamma(link = "log")))$coef[,1],
   times = 1L

@@ -22,7 +22,7 @@ double LogLik(const arma::mat& X, const arma::vec& y,
     mu = 1 / (1 + arma::exp(-eta));
     loglik = arma::sum(y % arma::log(mu) + (1 - y) % arma::log(1 - mu));
   }
-  else if (fam_link == "Gamma_inverse") {
+  else if (fam_link == "Gamma_log") {
     mu = arma::exp(eta);
     // Shape parameter assumed to be known or absorbed
     // This assumes a canonical link (log)
@@ -73,7 +73,7 @@ double Deviance(const arma::mat& X,
       }
     }
   }
-  else if (fam_link == "Gamma_inverse") {
+  else if (fam_link == "Gamma_log") {
     mu = arma::exp(eta);
     for (size_t i = 0; i < y.n_elem; ++i) {
       dev += 2.0 * ((y[i] - mu[i]) / mu[i] - std::log(y[i] / mu[i]));

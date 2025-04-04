@@ -53,22 +53,41 @@ public:
 };
 
 
-class GammaInverse : public Family {
+// class GammaInverse : public Family {
+// public:
+//   arma::vec link(const arma::vec& mu) const override {
+//     return 1.0 / (mu + 1e-8);
+//   }
+//   
+//   arma::vec inverse_link(const arma::vec& eta) const override {
+//     return 1.0 / (eta + 1e-8);
+//   }
+//   
+//   arma::vec variance(const arma::vec& mu) const override {
+//     return arma::square(mu);
+//   }
+//   
+//   arma::vec deviance(const arma::vec& y, const arma::vec& mu) const override {
+//     return 2 * ((y - mu) / mu - arma::log(y / mu));
+//   }
+// };
+
+class GammaLog : public Family {
 public:
   arma::vec link(const arma::vec& mu) const override {
-    return 1.0 / (mu + 1e-6);
+    return arma::log(mu);  
   }
   
   arma::vec inverse_link(const arma::vec& eta) const override {
-    return 1.0 / (eta + 1e-6);
+    return arma::exp(eta);  
   }
   
   arma::vec variance(const arma::vec& mu) const override {
-    return arma::square(mu);
+    return arma::square(mu);  
   }
   
   arma::vec deviance(const arma::vec& y, const arma::vec& mu) const override {
-    return 2 * ((y - mu) / mu - arma::log(y / mu));
+    return 2 * ((y - mu) / mu - arma::log(y / mu)); 
   }
 };
 

@@ -8,7 +8,8 @@ using namespace Rcpp;
 Family* get_family(std::string fam_link) {
   if (fam_link == "binomial_logit") return new BinomialLogit();
   if (fam_link == "gaussian_identity") return new GaussianIdentity();
-  if (fam_link == "Gamma_inverse") return new GammaInverse();
+  //if (fam_link == "Gamma_inverse") return new GammaInverse();
+  if (fam_link == "Gamma_log") return new GammaLog();
   if (fam_link == "poisson_log") return new PoissonLog();
   stop("Unsupported family/link combination: " + fam_link);
 }
