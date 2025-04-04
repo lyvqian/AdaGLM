@@ -14,6 +14,7 @@ X = depression %>% mutate(pressure = Work.Pressure+Academic.Pressure,
   as.matrix
 y = depression$Depression
 
+beta_glm = summary(glm(y~X[,2:7], family = binomial()))$coef[,1]
 
 family = "binomial_logit"
 bench <- suppressWarnings(microbenchmark(
@@ -26,7 +27,11 @@ bench <- suppressWarnings(microbenchmark(
 ))
 
 exec_time_Depression = summary(bench)$median
-names(loglik_Depression) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+exec_time_Depression
+
+beta_mat <- cbind(beta_adam$coefficients, beta_adagrad$coefficients, beta_adadelta$coefficients, beta_adasmooth$coefficients, as.numeric(beta_glm))
+colnames(beta_mat) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+beta_mat
 
 loglik_depression = c(LogLik(X,y,fam_link = family, beta = beta_adam$coefficients),
                  LogLik(X,y,fam_link = family, beta = beta_adagrad$coefficients),
@@ -34,6 +39,7 @@ loglik_depression = c(LogLik(X,y,fam_link = family, beta = beta_adam$coefficient
                  LogLik(X,y,fam_link = family, beta = beta_adasmooth$coefficients),
                  LogLik(X,y,fam_link = family, beta = beta_glm))
 names(loglik_depression) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+loglik_depression
 
 Deviance_depression = c(Deviance(X,y,fam_link = family, beta = beta_adam$coefficients),
                    Deviance(X,y,fam_link = family, beta = beta_adagrad$coefficients),
@@ -41,3 +47,5 @@ Deviance_depression = c(Deviance(X,y,fam_link = family, beta = beta_adam$coeffic
                    Deviance(X,y,fam_link = family, beta = beta_adasmooth$coefficients),
                    Deviance(X,y,fam_link = family, beta = beta_glm))
 names(Deviance_depression) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+Deviance_depression
+

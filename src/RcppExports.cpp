@@ -11,71 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// adadelta_logistic
-arma::vec adadelta_logistic(const arma::mat& X, const arma::vec& y, int max_iter, double epsilon, double rho);
-RcppExport SEXP _AdaptiveLearningRate_adadelta_logistic(SEXP XSEXP, SEXP ySEXP, SEXP max_iterSEXP, SEXP epsilonSEXP, SEXP rhoSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
-    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< double >::type rho(rhoSEXP);
-    rcpp_result_gen = Rcpp::wrap(adadelta_logistic(X, y, max_iter, epsilon, rho));
-    return rcpp_result_gen;
-END_RCPP
-}
-// adagrad_logistic
-arma::vec adagrad_logistic(const arma::mat& X, const arma::vec& y, double eta, int max_iter, double epsilon);
-RcppExport SEXP _AdaptiveLearningRate_adagrad_logistic(SEXP XSEXP, SEXP ySEXP, SEXP etaSEXP, SEXP max_iterSEXP, SEXP epsilonSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< double >::type eta(etaSEXP);
-    Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
-    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    rcpp_result_gen = Rcpp::wrap(adagrad_logistic(X, y, eta, max_iter, epsilon));
-    return rcpp_result_gen;
-END_RCPP
-}
-// adasmooth_logistic
-arma::vec adasmooth_logistic(const arma::mat& X, const arma::vec& y, double eta, int max_iter, double epsilon, double rho1, double rho2, int M);
-RcppExport SEXP _AdaptiveLearningRate_adasmooth_logistic(SEXP XSEXP, SEXP ySEXP, SEXP etaSEXP, SEXP max_iterSEXP, SEXP epsilonSEXP, SEXP rho1SEXP, SEXP rho2SEXP, SEXP MSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< double >::type eta(etaSEXP);
-    Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
-    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< double >::type rho1(rho1SEXP);
-    Rcpp::traits::input_parameter< double >::type rho2(rho2SEXP);
-    Rcpp::traits::input_parameter< int >::type M(MSEXP);
-    rcpp_result_gen = Rcpp::wrap(adasmooth_logistic(X, y, eta, max_iter, epsilon, rho1, rho2, M));
-    return rcpp_result_gen;
-END_RCPP
-}
-// adam_logistic
-arma::vec adam_logistic(const arma::mat& X, const arma::vec& y, double alpha, int max_iter, double beta1, double beta2, double epsilon);
-RcppExport SEXP _AdaptiveLearningRate_adam_logistic(SEXP XSEXP, SEXP ySEXP, SEXP alphaSEXP, SEXP max_iterSEXP, SEXP beta1SEXP, SEXP beta2SEXP, SEXP epsilonSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
-    Rcpp::traits::input_parameter< double >::type beta1(beta1SEXP);
-    Rcpp::traits::input_parameter< double >::type beta2(beta2SEXP);
-    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    rcpp_result_gen = Rcpp::wrap(adam_logistic(X, y, alpha, max_iter, beta1, beta2, epsilon));
-    return rcpp_result_gen;
-END_RCPP
-}
 // LogLik
 double LogLik(const arma::mat& X, const arma::vec& y, std::string fam_link, const arma::vec& beta);
 RcppExport SEXP _AdaptiveLearningRate_LogLik(SEXP XSEXP, SEXP ySEXP, SEXP fam_linkSEXP, SEXP betaSEXP) {
@@ -122,30 +57,11 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// irwls_logistic
-arma::vec irwls_logistic(const arma::mat& X, const arma::vec& y, int max_iter, double tol);
-RcppExport SEXP _AdaptiveLearningRate_irwls_logistic(SEXP XSEXP, SEXP ySEXP, SEXP max_iterSEXP, SEXP tolSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
-    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(irwls_logistic(X, y, max_iter, tol));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_AdaptiveLearningRate_adadelta_logistic", (DL_FUNC) &_AdaptiveLearningRate_adadelta_logistic, 5},
-    {"_AdaptiveLearningRate_adagrad_logistic", (DL_FUNC) &_AdaptiveLearningRate_adagrad_logistic, 5},
-    {"_AdaptiveLearningRate_adasmooth_logistic", (DL_FUNC) &_AdaptiveLearningRate_adasmooth_logistic, 8},
-    {"_AdaptiveLearningRate_adam_logistic", (DL_FUNC) &_AdaptiveLearningRate_adam_logistic, 7},
     {"_AdaptiveLearningRate_LogLik", (DL_FUNC) &_AdaptiveLearningRate_LogLik, 4},
     {"_AdaptiveLearningRate_Deviance", (DL_FUNC) &_AdaptiveLearningRate_Deviance, 4},
     {"_AdaptiveLearningRate_adaglm", (DL_FUNC) &_AdaptiveLearningRate_adaglm, 8},
-    {"_AdaptiveLearningRate_irwls_logistic", (DL_FUNC) &_AdaptiveLearningRate_irwls_logistic, 4},
     {NULL, NULL, 0}
 };
 
