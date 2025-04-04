@@ -10,7 +10,7 @@ X = air %>% mutate(intercept = rep(1,nrow(air))) %>%
   as.matrix
 y = air$Ozone
 
-beta_glm = summary(glm(y~X[,2:4], family = Gamma(link = "log")))$coef[,1]
+beta_glm = summary(glm(y~X[,2:4], family = Gamma(link = "inverse")))$coef[,1]
 
 family = "Gamma_inverse"
 bench <- suppressWarnings(microbenchmark(
