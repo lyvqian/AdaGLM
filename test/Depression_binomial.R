@@ -1,4 +1,4 @@
-library(AdaptiveLearningRate)
+library(AdaGLM)
 library(microbenchmark)
 library(dplyr)
 

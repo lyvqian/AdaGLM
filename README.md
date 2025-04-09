@@ -1,3 +1,5 @@
+# AdaGLM
+
 This is a repository for the final project of BIOSTAT 815.
 
 ## Installation

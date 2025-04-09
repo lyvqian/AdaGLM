@@ -13,7 +13,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // LogLik
 double LogLik(const arma::mat& X, const arma::vec& y, std::string fam_link, const arma::vec& beta);
-RcppExport SEXP _AdaptiveLearningRate_LogLik(SEXP XSEXP, SEXP ySEXP, SEXP fam_linkSEXP, SEXP betaSEXP) {
+RcppExport SEXP _AdaGLM_LogLik(SEXP XSEXP, SEXP ySEXP, SEXP fam_linkSEXP, SEXP betaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -27,7 +27,7 @@ END_RCPP
 }
 // Deviance
 double Deviance(const arma::mat& X, const arma::vec& y, const arma::vec& beta, std::string fam_link);
-RcppExport SEXP _AdaptiveLearningRate_Deviance(SEXP XSEXP, SEXP ySEXP, SEXP betaSEXP, SEXP fam_linkSEXP) {
+RcppExport SEXP _AdaGLM_Deviance(SEXP XSEXP, SEXP ySEXP, SEXP betaSEXP, SEXP fam_linkSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -41,7 +41,7 @@ END_RCPP
 }
 // adaglm
 List adaglm(const arma::mat& X, const arma::vec& y, std::string fam_link, std::string optimizer, double alpha, double rho, int max_iter, double tol);
-RcppExport SEXP _AdaptiveLearningRate_adaglm(SEXP XSEXP, SEXP ySEXP, SEXP fam_linkSEXP, SEXP optimizerSEXP, SEXP alphaSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP tolSEXP) {
+RcppExport SEXP _AdaGLM_adaglm(SEXP XSEXP, SEXP ySEXP, SEXP fam_linkSEXP, SEXP optimizerSEXP, SEXP alphaSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -59,13 +59,13 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_AdaptiveLearningRate_LogLik", (DL_FUNC) &_AdaptiveLearningRate_LogLik, 4},
-    {"_AdaptiveLearningRate_Deviance", (DL_FUNC) &_AdaptiveLearningRate_Deviance, 4},
-    {"_AdaptiveLearningRate_adaglm", (DL_FUNC) &_AdaptiveLearningRate_adaglm, 8},
+    {"_AdaGLM_LogLik", (DL_FUNC) &_AdaGLM_LogLik, 4},
+    {"_AdaGLM_Deviance", (DL_FUNC) &_AdaGLM_Deviance, 4},
+    {"_AdaGLM_adaglm", (DL_FUNC) &_AdaGLM_adaglm, 8},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_AdaptiveLearningRate(DllInfo *dll) {
+RcppExport void R_init_AdaGLM(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

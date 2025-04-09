@@ -1,4 +1,4 @@
-library(AdaptiveLearningRate)
+library(AdaGLM)
 
 n <- 1000    
 p <- 50

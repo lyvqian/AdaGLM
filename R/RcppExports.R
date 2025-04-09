@@ -2,14 +2,14 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 LogLik <- function(X, y, fam_link, beta) {
-    .Call(`_AdaptiveLearningRate_LogLik`, X, y, fam_link, beta)
+    .Call(`_AdaGLM_LogLik`, X, y, fam_link, beta)
 }
 
 Deviance <- function(X, y, beta, fam_link) {
-    .Call(`_AdaptiveLearningRate_Deviance`, X, y, beta, fam_link)
+    .Call(`_AdaGLM_Deviance`, X, y, beta, fam_link)
 }
 
 adaglm <- function(X, y, fam_link, optimizer, alpha = 0.01, rho = 0.99, max_iter = 1000L, tol = 1e-6) {
-    .Call(`_AdaptiveLearningRate_adaglm`, X, y, fam_link, optimizer, alpha, rho, max_iter, tol)
+    .Call(`_AdaGLM_adaglm`, X, y, fam_link, optimizer, alpha, rho, max_iter, tol)
 }
 

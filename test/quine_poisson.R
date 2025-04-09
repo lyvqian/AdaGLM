@@ -1,4 +1,4 @@
-library(AdaptiveLearningRate)
+library(AdaGLM)
 library(dplyr)
 library(microbenchmark)
 library(MASS)

@@ -1,4 +1,4 @@
-library(AdaptiveLearningRate)
+library(AdaGLM)
 library(dplyr)
 
 income = read.csv("census_income.csv")
