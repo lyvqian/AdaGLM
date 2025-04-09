@@ -6,5 +6,6 @@ The latest version of this package can be installed using
 
 ```r
 # install.packages("devtools") # if not already installed
-devtools::install_github("lyvqian/AdaptiveLearningRate")
+devtools::install_github("lyvqian/AdaGLM")
+```
 
