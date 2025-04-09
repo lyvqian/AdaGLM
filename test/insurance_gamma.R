@@ -25,22 +25,22 @@ bench <- suppressWarnings(microbenchmark(
 exec_time_insurance = summary(bench)$median
 exec_time_insurance
 
-beta_mat <- cbind(beta_adam$coefficients, beta_adagrad$coefficients, beta_adadelta$coefficients, beta_adasmooth$coefficients, as.numeric(beta_glm))
+beta_mat <- cbind(beta_adam, beta_adagrad, beta_adadelta, beta_adasmooth, as.numeric(beta_glm))
 colnames(beta_mat) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 beta_mat
 
-loglik_insurance = c(LogLik(X,y,fam_link = family, beta = beta_adam$coefficients),
-                 LogLik(X,y,fam_link = family, beta = beta_adagrad$coefficients),
-                 LogLik(X,y,fam_link = family, beta = beta_adadelta$coefficients),
-                 LogLik(X,y,fam_link = family, beta = beta_adasmooth$coefficients),
+loglik_insurance = c(LogLik(X,y,fam_link = family, beta = beta_adam),
+                 LogLik(X,y,fam_link = family, beta = beta_adagrad),
+                 LogLik(X,y,fam_link = family, beta = beta_adadelta),
+                 LogLik(X,y,fam_link = family, beta = beta_adasmooth),
                  LogLik(X,y,fam_link = family, beta = beta_glm))
 names(loglik_insurance) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 loglik_insurance
 
-Deviance_insurance = c(Deviance(X,y,fam_link = family, beta = beta_adam$coefficients),
-                   Deviance(X,y,fam_link = family, beta = beta_adagrad$coefficients),
-                   Deviance(X,y,fam_link = family, beta = beta_adadelta$coefficients),
-                   Deviance(X,y,fam_link = family, beta = beta_adasmooth$coefficients),
+Deviance_insurance = c(Deviance(X,y,fam_link = family, beta = beta_adam),
+                   Deviance(X,y,fam_link = family, beta = beta_adagrad),
+                   Deviance(X,y,fam_link = family, beta = beta_adadelta),
+                   Deviance(X,y,fam_link = family, beta = beta_adasmooth),
                    Deviance(X,y,fam_link = family, beta = beta_glm))
 names(Deviance_insurance) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 Deviance_insurance

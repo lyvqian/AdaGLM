@@ -22,7 +22,7 @@ beta_adagrad <- adaglm(X_inter,y[1:500],fam_link = family, optimizer = "AdaGrad"
 beta_adadelta <- adaglm(X_inter,y[1:500],fam_link = family, optimizer = "AdaDelta", rho=0.99)
 beta_adasmooth <- adaglm(X_inter,y[1:500],fam_link = family, optimizer = "AdaSmooth", alpha=0.1)
 
-beta_mat <- cbind(beta_adam$coefficients, beta_adagrad$coefficients, beta_adadelta$coefficients, beta_adasmooth$coefficients, as.numeric(beta_glm))
+beta_mat <- cbind(beta_adam, beta_adagrad, beta_adadelta, beta_adasmooth, as.numeric(beta_glm))
 colnames(beta_mat) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 beta_mat
 
