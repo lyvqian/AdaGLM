@@ -5,6 +5,6 @@ This is a repository for the final project of BIOSTAT 815.
 The latest version of this package can be installed using
 
 ```r
-# install.packages("remotes") # if not already installed
-remotes::install_github("lyvqian/AdaptiveLearningRate")
+# install.packages("devtools") # if not already installed
+devtools::install_github("lyvqian/AdaptiveLearningRate")
 
