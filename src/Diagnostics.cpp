@@ -4,7 +4,7 @@ using namespace arma;
 
 // [[Rcpp::export]]
 double LogLik(const arma::mat& X, const arma::vec& y,
-              std::string fam_link, const arma::vec& beta) {
+              std::string fam_link, const arma::vec& beta, double eps = 1e-15) {
   arma::vec eta = X * beta;
   arma::vec mu;
   double loglik = 0.0;
@@ -20,7 +20,8 @@ double LogLik(const arma::mat& X, const arma::vec& y,
   }
   else if (fam_link == "binomial_logit") {
     mu = 1 / (1 + arma::exp(-eta));
-    loglik = arma::sum(y % arma::log(mu) + (1 - y) % arma::log(1 - mu));
+    arma::vec mu_clipped = arma::clamp(mu, eps, 1.0 - eps);
+    loglik = arma::sum(y % arma::log(mu) + (1 - y) % arma::log(1 - mu_clipped));
   }
   else if (fam_link == "Gamma_log") {
     mu = arma::exp(eta);
