@@ -1,7 +1,7 @@
 library(AdaGLM)
 
 n <- 1000    
-p <- 50
+p <- 500
 
 mse <- function(beta_est, beta_true) {
   mean((beta_est - beta_true)^2)

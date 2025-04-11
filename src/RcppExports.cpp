@@ -12,8 +12,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // LogLik
-double LogLik(const arma::mat& X, const arma::vec& y, std::string fam_link, const arma::vec& beta);
-RcppExport SEXP _AdaGLM_LogLik(SEXP XSEXP, SEXP ySEXP, SEXP fam_linkSEXP, SEXP betaSEXP) {
+double LogLik(const arma::mat& X, const arma::vec& y, std::string fam_link, const arma::vec& beta, double eps);
+RcppExport SEXP _AdaGLM_LogLik(SEXP XSEXP, SEXP ySEXP, SEXP fam_linkSEXP, SEXP betaSEXP, SEXP epsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,7 +21,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
     Rcpp::traits::input_parameter< std::string >::type fam_link(fam_linkSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type beta(betaSEXP);
-    rcpp_result_gen = Rcpp::wrap(LogLik(X, y, fam_link, beta));
+    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
+    rcpp_result_gen = Rcpp::wrap(LogLik(X, y, fam_link, beta, eps));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -59,7 +60,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_AdaGLM_LogLik", (DL_FUNC) &_AdaGLM_LogLik, 4},
+    {"_AdaGLM_LogLik", (DL_FUNC) &_AdaGLM_LogLik, 5},
     {"_AdaGLM_Deviance", (DL_FUNC) &_AdaGLM_Deviance, 4},
     {"_AdaGLM_adaglm", (DL_FUNC) &_AdaGLM_adaglm, 8},
     {NULL, NULL, 0}
