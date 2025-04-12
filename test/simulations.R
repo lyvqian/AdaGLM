@@ -10,7 +10,7 @@ mse <- function(beta_est, beta_true) {
 n <- 1000      
 p <- 500      
 density <- 0.1 
-n_replicates <- 2 
+n_replicates <- 100
 
 coef_list <- vector("list", replicates)  # list to store coefficient estimates
 
