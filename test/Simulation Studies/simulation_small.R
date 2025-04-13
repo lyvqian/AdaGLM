@@ -12,9 +12,9 @@ n <- 100
 p <- 5    
 n_replicates <- 100
 
-## binomial
-
 set.seed(123)
+
+## binomial
 run_simulation_binomial <- function(){
   # matrix to store the results
   res_mat <- matrix(NA, nrow=5, ncol=2)
@@ -70,7 +70,7 @@ wide_df_binomial <- df_binomial %>%
   dplyr::select(replicate, name, value) %>%
   pivot_wider(names_from = name, values_from = value)
 
-save(wide_df_binomial, file="./test/res_binomial_small.Rda")
+#save(wide_df_binomial, file="./test/res_binomial_small.Rda")
 
 # Gaussian
 
@@ -128,7 +128,7 @@ wide_df_gaussian <- df_gaussian %>%
   dplyr::select(replicate, name, value) %>%
   pivot_wider(names_from = name, values_from = value)
 
-save(wide_df_gaussian, file="./test/res_gaussian_small.Rda")
+#save(wide_df_gaussian, file="./test/res_gaussian_small.Rda")
 
 
 # Poisson
@@ -188,88 +188,79 @@ wide_df_poisson <- df_poisson %>%
   dplyr::select(replicate, name, value) %>%
   pivot_wider(names_from = name, values_from = value)
 
-save(wide_df_poisson, file="./test/res_poisson_small.Rda")
+#save(wide_df_poisson, file="./test/res_poisson_small.Rda")
 
 # Gamma
 
-# run_simulation_gamma <- function(){
-#   # matrix to store the results
-#   res_mat <- matrix(NA, nrow=5, ncol=2)
-#   colnames(res_mat) <- c("MSE", "Time")
-#   rownames(res_mat) <- c("adam", "adagrad","adadelta", "adasmooth", "glm")
-#   
-#   phi=0.5
-#   
-#   X <- matrix(rnorm(n * p) + 1e-8, nrow = n, ncol = p)
-#   
-#   beta_true <- rnorm(p)
-#   #beta[sample(1:p, size = sparsity * p)] <- 0  # make it 90% sparse
-#   
-#   eta <- X %*% beta_true
-#   
-#   eta <- pmin(pmax(eta, -5), 5)
-#   
-#   mu <- as.vector(exp(eta))
-#   
-#   y <- rgamma(n, shape = 1/phi, scale = mu * phi)
-#   
-#   y <-  pmax(y, 100)
-# 
-#   X_dense <- as.matrix(X)
-#   
-#   # Fit GLM
-#   family = "Gamma_log"
-#   bench <- suppressWarnings(microbenchmark(
-#     beta_adam <- adaglm(X_dense,y,fam_link = family, optimizer = "ADAM"),
-#     beta_adagrad <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1),
-#     beta_adadelta <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaDelta"),
-#     beta_adasmooth <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaSmooth"),
-#     #beta_glm <- summary(glm(y~X_dense - 1, family = Gamma(link="log")))$coef[,1],
-#     times = 1L
-#   ))
-#   
-#   glm_time <- system.time({
-#     beta_glm <- tryCatch({
-#       coef(glm(
-#         y ~ X_dense - 1,
-#         family = Gamma(link = "log"),
-#         control = glm.control(maxit = 100, epsilon = 1e-8)
-#       ))
-#     }, error = function(e) {
-#       warning("GLM failed: ", conditionMessage(e))
-#       rep(NA, p)
-#     })
-#   })[["elapsed"]]
-#   
-#   beta_adam <- adaglm(X_dense,y,fam_link = family, optimizer = "ADAM")
-#   beta_adagrad <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1)
-#   beta_adadelta <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaDelta")
-#   beta_adasmooth <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaSmooth")
-#   beta_glm <- tryCatch({
-#     coef(glm(y ~ X_dense - 1, family = Gamma(link = "log")))
-#   }, error = function(e) {
-#     warning("GLM failed to converge: ", conditionMessage(e))
-#     rep(NA, p)
-#   })
-#   
-#   res_mat[,1] <- c(mse(beta_adam, beta_true), mse(beta_adagrad, beta_true), mse(beta_adadelta, beta_true), mse(beta_adasmooth, beta_true), mse(beta_glm, beta_true))
-#   res_mat[,2] <- c(summary(bench)$median, glm_time)
-#   
-#   return(res_mat)
-# }
-# 
-# results_gamma <- do.call(rbind, lapply(1:n_replicates, function(i) run_simulation_gamma()))
-# 
-# df_gamma <- as.data.frame(results_gamma)
-# df_gamma$method=rownames(results_gamma)
-# df_gamma$replicate=rep(1:n_replicates, each = 5)
-# rownames(df_gamma) <- NULL
-# 
-# wide_df_gamma <- df_gamma %>%
-#   pivot_longer(cols = c(MSE, Time), names_to = "metric", values_to = "value") %>%
-#   mutate(name = paste(method, metric, sep = "_")) %>%
-#   dplyr::select(replicate, name, value) %>%
-#   pivot_wider(names_from = name, values_from = value)
-# 
-# save(wide_df_gamma, file="./test/res_gamma_small.Rda")
-# 
+run_simulation_gamma <- function(){
+  # matrix to store the results
+  res_mat <- matrix(NA, nrow=5, ncol=2)
+  colnames(res_mat) <- c("MSE", "Time")
+  rownames(res_mat) <- c("adam", "adagrad","adadelta", "adasmooth", "glm")
+
+  X <- matrix(rnorm(n * p), nrow = n, ncol = p)
+  colnames(X) <- paste0("X", 1:p)
+  
+  beta_true <- rnorm(5)
+  eta <- X %*% beta_true
+  mu <- exp(eta)
+  phi <- 0.5
+  y <- rgamma(n, shape = 1/phi, scale = mu * phi)
+
+  # Fit GLM
+  family = "Gamma_log"
+  bench <- suppressWarnings(microbenchmark(
+    beta_adam <- adaglm(X,y,fam_link = family, optimizer = "ADAM", alpha=0.001),
+    beta_adagrad <- adaglm(X,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1),
+    beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta"),
+    beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001),
+    beta_glm <- summary(glm(y ~ X - 1, family = Gamma(link="log")))$coef[,1],
+    times = 1L
+  ))
+
+  glm_time <- system.time({
+    beta_glm <- tryCatch({
+      coef(glm(
+        y ~ X - 1,
+        family = Gamma(link = "log"),
+        control = glm.control(maxit = 100, epsilon = 1e-8)
+      ))
+    }, error = function(e) {
+      warning("GLM failed: ", conditionMessage(e))
+      rep(NA, p)
+    })
+  })[["elapsed"]]
+
+  beta_adam <- adaglm(X,y,fam_link = family, optimizer = "ADAM", alpha=0.001)
+  beta_adagrad <- adaglm(X,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1)
+  beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta")
+  beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001)
+  beta_glm <- tryCatch({
+    coef(glm(y ~ X - 1, family = Gamma(link = "log")))
+  }, error = function(e) {
+    warning("GLM failed to converge: ", conditionMessage(e))
+    rep(NA, p)
+  })
+
+  res_mat[,1] <- c(mse(beta_adam, beta_true), mse(beta_adagrad, beta_true), mse(beta_adadelta, beta_true), mse(beta_adasmooth, beta_true), mse(beta_glm, beta_true))
+  res_mat[,2] <- c(summary(bench)$median)
+
+  return(res_mat)
+}
+
+results_gamma <- do.call(rbind, lapply(1:n_replicates, function(i) run_simulation_gamma()))
+
+df_gamma <- as.data.frame(results_gamma)
+df_gamma$method=rownames(results_gamma)
+df_gamma$replicate=rep(1:n_replicates, each = 5)
+rownames(df_gamma) <- NULL
+
+wide_df_gamma <- df_gamma %>%
+  pivot_longer(cols = c(MSE, Time), names_to = "metric", values_to = "value") %>%
+  mutate(name = paste(method, metric, sep = "_")) %>%
+  dplyr::select(replicate, name, value) %>%
+  pivot_wider(names_from = name, values_from = value)
+
+#save(wide_df_gamma, file="./test/res_gamma_small.Rda")
+
+
