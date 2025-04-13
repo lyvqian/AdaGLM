@@ -13,11 +13,11 @@ Family* get_family(std::string fam_link) {
   stop("Unsupported family/link combination: " + fam_link);
 }
 
-//' Fit generalized linear regression models with adaptive learning rate algorithm
+//' Fit generalized linear models with adaptive learning rate algorithm
 //'
 //' @name adaglm
 //'
-//' @description adaglm( ) fits generalized linear regression models with a self-defined adaptive learning rate algorithm and stepsize. Default is ADAM with alpha=0.01.   
+//' @description adaglm( ) fits generalized linear models with a self-defined adaptive learning rate algorithm and stepsize. Default is ADAM with alpha=0.01.   
 //'
 //' @usage adaglm(X, y, fam_link = "binomial_logit", optimizer = "ADAM", 
 //' alpha = 0.01, rho = 0.99, max_iter = 1000, tol = 1e-6)
@@ -37,11 +37,54 @@ Family* get_family(std::string fam_link) {
 //'
 //' @return A vector of estimated regression coefficients 
 //'
-//' //@section See Also:
-//' //
 //'
 //' @examples
-//' ## Use the R built-in "quine" dataset
+//' 
+//' ## An example for Binomial-logit: Use the R built-in "mtcars" dataset
+//' 
+//' data(mtcars)
+//' X = mtcars %>% mutate(intercept = rep(1,nrow(mtcars))) %>% 
+//'   dplyr::select(intercept, mpg, wt, hp) %>%
+//'   as.matrix
+//' y = mtcars$am
+//' 
+//' beta_glm = summary(glm(y~X[,2:4], family = binomial()))$coef[,1]
+//' 
+//' family = "binomial_logit"
+//' 
+//' bench <- suppressWarnings(microbenchmark(
+//'   beta_adam <- adaglm(X,y,fam_link = family, optimizer = "ADAM", alpha=0.001),
+//'   beta_adagrad <- adaglm(X,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1),
+//'   beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta"),
+//'   beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001),
+//'   beta_glm = summary(glm(y~X[,2:4], family = binomial))$coef[,1], times = 1L))
+//' exec_time_mtcars = summary(bench)$median
+//' names(exec_time_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' exec_time_mtcars
+//'   
+//' beta_mat <- cbind(beta_adam, beta_adagrad, beta_adadelta, beta_adasmooth, as.numeric(beta_glm))
+//' colnames(beta_mat) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' beta_mat
+//'   
+//' loglik_mtcars = c(LogLik(X,y,fam_link = family, beta = beta_adam),
+//'       LogLik(X,y,fam_link = family, beta = beta_adagrad),
+//'       LogLik(X,y,fam_link = family, beta = beta_adadelta),
+//'       LogLik(X,y,fam_link = family, beta = beta_adasmooth),
+//'       LogLik(X,y,fam_link = family, beta = beta_glm))
+//'       
+//' names(loglik_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' loglik_mtcars
+//' 
+//' Deviance_mtcars = c(Deviance(X,y,fam_link = family, beta = beta_adam),
+//'                     Deviance(X,y,fam_link = family, beta = beta_adagrad),
+//'                     Deviance(X,y,fam_link = family, beta = beta_adadelta),
+//'                     Deviance(X,y,fam_link = family, beta = beta_adasmooth),
+//'                     Deviance(X,y,fam_link = family, beta = beta_glm))
+//' names(Deviance_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' Deviance_mtcars
+//' 
+//' 
+//' ## An example for Poisson-log: Use the R built-in "quine" dataset
 //' if (requireNamespace("dplyr", quietly = TRUE) && requireNamespace("microbenchmark", quietly = TRUE)) {
 //'   data(quine, package = "MASS")
 //'   X <- dplyr::mutate(quine,
@@ -90,6 +133,93 @@ Family* get_family(std::string fam_link) {
 //'                  Deviance(X,y,fam_link = family, beta = beta_glm))
 //'                  names(Deviance_quine) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 //' Deviance_quine
+//' 
+//' ## An example for Gaussian-identity: Use the R built-in "mtcars" dataset
+//' 
+//' data(mtcars)
+//' X = mtcars %>% mutate(intercept = rep(1,nrow(mtcars))) %>% 
+//'   dplyr::select(intercept, wt, hp) %>%
+//'   as.matrix
+//' y = mtcars$mpg
+//' 
+//' beta_glm = summary(glm(y~X[,2:3], family = gaussian()))$coef[,1]
+//' 
+//' family = "gaussian_identity"
+//' 
+//' bench <- suppressWarnings(microbenchmark(
+//'   beta_adam <- adaglm(X,y,fam_link = family, optimizer = "ADAM"),
+//'   beta_adagrad <- adaglm(X,y,fam_link = family, optimizer = "AdaGrad"),
+//'   beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta"),
+//'   beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth"),
+//'   beta_glm = summary(glm(y~X[,2:3], family = gaussian()))$coef[,1], times = 1L))
+//' exec_time_mtcars = summary(bench)$median
+//' names(exec_time_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' exec_time_mtcars
+//'   
+//' beta_mat <- cbind(beta_adam, beta_adagrad, beta_adadelta, beta_adasmooth, as.numeric(beta_glm))
+//' colnames(beta_mat) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' beta_mat
+//'   
+//' loglik_mtcars = c(LogLik(X,y,fam_link = family, beta = beta_adam),
+//'       LogLik(X,y,fam_link = family, beta = beta_adagrad),
+//'       LogLik(X,y,fam_link = family, beta = beta_adadelta),
+//'       LogLik(X,y,fam_link = family, beta = beta_adasmooth),
+//'       LogLik(X,y,fam_link = family, beta = beta_glm))
+//'       
+//' names(loglik_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' loglik_mtcars
+//' 
+//' Deviance_mtcars = c(Deviance(X,y,fam_link = family, beta = beta_adam),
+//'                     Deviance(X,y,fam_link = family, beta = beta_adagrad),
+//'                     Deviance(X,y,fam_link = family, beta = beta_adadelta),
+//'                     Deviance(X,y,fam_link = family, beta = beta_adasmooth),
+//'                     Deviance(X,y,fam_link = family, beta = beta_glm))
+//' names(Deviance_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' Deviance_mtcars
+//' 
+//' ## An example for Gamma-log: Use the R built-in "airquality" dataset
+//' 
+//' data(airquality)
+//' air <- na.omit(airquality)
+//' X = air %>% mutate(intercept = rep(1,nrow(air))) %>% 
+//'   dplyr::select(intercept, Solar.R, Temp, Wind) %>%
+//'   as.matrix
+//' 
+//' y = air$Ozone
+//' 
+//' beta_glm = summary(glm(y~X[,2:4], family = Gamma(link = "log")))$coef[,1]
+//' 
+//' family = "Gamma_log"
+//' bench <- suppressWarnings(microbenchmark(
+//'   beta_adam <- adaglm(X,y,fam_link = family, optimizer = "ADAM", alpha=0.0001),
+//'   beta_adagrad <- adaglm(X,y,fam_link = family, optimizer = "AdaGrad", alpha=0.0001),
+//'   beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta"),
+//'   beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.0001),
+//'   beta_glm = summary(glm(y~X[,2:4], family = Gamma(link = "log")))$coef[,1], times = 1L))
+//' exec_time_insurance = summary(bench)$median
+//' names(exec_time_insurance) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' exec_time_insurance
+//'   
+//' beta_mat <- cbind(beta_adam, beta_adagrad, beta_adadelta, beta_adasmooth, as.numeric(beta_glm))
+//' colnames(beta_mat) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' beta_mat
+//' loglik_insurance = c(LogLik(X,y,fam_link = family, beta = beta_adam),
+//'                       LogLik(X,y,fam_link = family, beta = beta_adagrad),
+//'                       LogLik(X,y,fam_link = family, beta = beta_adadelta),
+//'                       LogLik(X,y,fam_link = family, beta = beta_adasmooth),
+//'                       LogLik(X,y,fam_link = family, beta = beta_glm))
+//' names(loglik_insurance) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' loglik_insurance
+//'   
+//' Deviance_insurance = c(Deviance(X,y,fam_link = family, beta = beta_adam),
+//'                         Deviance(X,y,fam_link = family, beta = beta_adagrad),
+//'                         Deviance(X,y,fam_link = family, beta = beta_adadelta),
+//'                         Deviance(X,y,fam_link = family, beta = beta_adasmooth),
+//'                         Deviance(X,y,fam_link = family, beta = beta_glm))
+//' names(Deviance_insurance) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
+//' Deviance_insurance
+//' 
+//' 
 //' 
 //' @export
 //'
