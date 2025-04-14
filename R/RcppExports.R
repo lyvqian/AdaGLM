@@ -193,6 +193,7 @@ Deviance <- function(X, y, beta, fam_link) {
 #'   beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.0001),
 #'   beta_glm = summary(glm(y~X[,2:4], family = Gamma(link = "log")))$coef[,1], times = 1L))
 #' exec_time_insurance = summary(bench)$median
+#' names(exec_time_insurance) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 #' exec_time_insurance
 #'   
 #' beta_mat <- cbind(beta_adam, beta_adagrad, beta_adadelta, beta_adasmooth, as.numeric(beta_glm))

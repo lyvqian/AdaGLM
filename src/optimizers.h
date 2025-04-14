@@ -56,7 +56,7 @@ arma::vec run_optimizer(const arma::mat& X, const arma::vec& y,
       arma::vec m_hat = m / (1 - std::pow(cfg.beta1, iter+1));
       arma::vec v_hat = v / (1 - std::pow(cfg.beta2, iter+1));
       
-      update = cfg.alpha * m_hat / (arma::sqrt(v_hat) + cfg.epsilon);
+      update = cfg.alpha * m_hat / (arma::sqrt(v_hat) + 1e-8);
       
       arma::vec theta_old = theta;
       theta -= update;
@@ -104,7 +104,7 @@ arma::vec run_optimizer(const arma::mat& X, const arma::vec& y,
 
         E_g2 = ct2 % gradient2 + (1 - ct2) % E_g2;
         
-        update = (cfg.alpha / (arma::sqrt(E_g2) + cfg.epsilon)) % grad;
+        update = (cfg.alpha / (arma::sqrt(E_g2) + 1e-6)) % grad;
 
         delta_theta.shed_col(0);
         delta_theta = join_rows(delta_theta,update);
