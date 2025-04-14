@@ -40,6 +40,9 @@ If intercept is needed, a column of 1's has to be manually added to X.
 
 ## An example for Binomial-logit: Use the R built-in "mtcars" dataset
 if (requireNamespace("dplyr", quietly = TRUE) && requireNamespace("microbenchmark", quietly = TRUE)) {
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(microbenchmark))
+
 data(mtcars)
 X = mtcars \%>\% mutate(intercept = rep(1,nrow(mtcars))) \%>\% 
   dplyr::select(intercept, mpg, wt, hp) \%>\%

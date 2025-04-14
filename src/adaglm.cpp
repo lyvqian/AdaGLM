@@ -42,6 +42,9 @@ Family* get_family(std::string fam_link) {
 //' 
 //' ## An example for Binomial-logit: Use the R built-in "mtcars" dataset
 //' if (requireNamespace("dplyr", quietly = TRUE) && requireNamespace("microbenchmark", quietly = TRUE)) {
+//' suppressPackageStartupMessages(library(dplyr))
+//' suppressPackageStartupMessages(library(microbenchmark))
+//' 
 //' data(mtcars)
 //' X = mtcars %>% mutate(intercept = rep(1,nrow(mtcars))) %>% 
 //'   dplyr::select(intercept, mpg, wt, hp) %>%
