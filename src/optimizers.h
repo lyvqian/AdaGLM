@@ -79,7 +79,7 @@ arma::vec run_optimizer(const arma::mat& X, const arma::vec& y,
     } else if (cfg.method == AdaDelta){
       arma::vec gradient2 = grad % grad;
       E_g2 = cfg.rho * E_g2 + (1 - cfg.rho) * gradient2;
-      arma::vec delta_theta = (sqrt(E_delta_theta2 + cfg.epsilon) / sqrt(E_g2 + cfg.epsilon)) % grad;
+      arma::vec delta_theta = (sqrt(E_delta_theta2 + 1e-8) / sqrt(E_g2 + 1e-8)) % grad;
       E_delta_theta2 = cfg.rho * E_delta_theta2 + (1 - cfg.rho) * (delta_theta % delta_theta);
       
       update = delta_theta;
