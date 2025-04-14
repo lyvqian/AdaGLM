@@ -41,7 +41,7 @@ Family* get_family(std::string fam_link) {
 //' @examples
 //' 
 //' ## An example for Binomial-logit: Use the R built-in "mtcars" dataset
-//' 
+//' if (requireNamespace("dplyr", quietly = TRUE) && requireNamespace("microbenchmark", quietly = TRUE)) {
 //' data(mtcars)
 //' X = mtcars %>% mutate(intercept = rep(1,nrow(mtcars))) %>% 
 //'   dplyr::select(intercept, mpg, wt, hp) %>%
@@ -58,6 +58,7 @@ Family* get_family(std::string fam_link) {
 //'   beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta"),
 //'   beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001),
 //'   beta_glm = summary(glm(y~X[,2:4], family = binomial))$coef[,1], times = 1L))
+//' }
 //' exec_time_mtcars = summary(bench)$median
 //' names(exec_time_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 //' exec_time_mtcars

@@ -115,8 +115,6 @@ arma::vec run_optimizer(const arma::mat& X, const arma::vec& y,
         if (arma::norm(theta-theta_old, 2) < cfg.epsilon) break;
       }
     }
-
-    
   }
   
   return theta;

@@ -39,7 +39,7 @@ If intercept is needed, a column of 1's has to be manually added to X.
 \examples{
 
 ## An example for Binomial-logit: Use the R built-in "mtcars" dataset
-
+if (requireNamespace("dplyr", quietly = TRUE) && requireNamespace("microbenchmark", quietly = TRUE)) {
 data(mtcars)
 X = mtcars \%>\% mutate(intercept = rep(1,nrow(mtcars))) \%>\% 
   dplyr::select(intercept, mpg, wt, hp) \%>\%
@@ -56,6 +56,7 @@ bench <- suppressWarnings(microbenchmark(
   beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta"),
   beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001),
   beta_glm = summary(glm(y~X[,2:4], family = binomial))$coef[,1], times = 1L))
+}
 exec_time_mtcars = summary(bench)$median
 names(exec_time_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 exec_time_mtcars
@@ -195,6 +196,7 @@ bench <- suppressWarnings(microbenchmark(
   beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.0001),
   beta_glm = summary(glm(y~X[,2:4], family = Gamma(link = "log")))$coef[,1], times = 1L))
 exec_time_insurance = summary(bench)$median
+names(exec_time_insurance) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 exec_time_insurance
   
 beta_mat <- cbind(beta_adam, beta_adagrad, beta_adadelta, beta_adasmooth, as.numeric(beta_glm))
