@@ -39,20 +39,25 @@ run_simulation_binomial <- function(){
   family = "binomial_logit"
   bench <- suppressWarnings(microbenchmark(
     beta_adam <- adaglm(X_dense,y,fam_link = family, optimizer = "ADAM", alpha=0.001),
-    beta_adagrad <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1),
-    beta_adadelta <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaDelta"),
+    beta_adagrad <- adaglm(X_dense,y,fam_link = family,  optimizer = "AdaGrad", alpha=0.1),
+    beta_adadelta <- adaglm(X_dense,y,fam_link = family,   optimizer = "AdaDelta"),
     beta_adasmooth <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001),
     beta_glm <- summary(glm(y~X_dense - 1, family = binomial()))$coef[,1],
     times = 1L
   ))
   
-  beta_adam <- adaglm(X_dense,y,fam_link = family, optimizer = "ADAM", alpha=0.001)
-  beta_adagrad <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1)
+  beta_adam <- adaglm(X_dense,y,fam_link = family,  optimizer = "ADAM", alpha=0.001)
+  beta_adagrad <- adaglm(X_dense,y,fam_link = family,  optimizer = "AdaGrad", alpha=0.1)
   beta_adadelta <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaDelta")
   beta_adasmooth <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001)
-  beta_glm <- summary(glm(y~X_dense[,2:ncol(X_dense)], family = binomial()))$coef[,1]
+  beta_glm <- summary(glm(y~X_dense - 1, family = binomial()))$coef[,1]
+  print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
   
-  res_mat[,1] <- c(mse(beta_adam, beta_true), mse(beta_adagrad, beta_true), mse(beta_adadelta, beta_true), mse(beta_adasmooth, beta_true), mse(beta_glm, beta_true))
+  res_mat[,1] <- c(mse(beta_adam$coef, beta_true),
+                   mse(beta_adagrad$coef, beta_true), 
+                   mse(beta_adadelta$coef, beta_true), 
+                   mse(beta_adasmooth$coef, beta_true), 
+                   mse(beta_glm, beta_true))
   res_mat[,2] <- summary(bench)$median
   
   return(res_mat)
@@ -71,7 +76,7 @@ wide_df_binomial <- df_binomial %>%
   select(replicate, name, value) %>%
   pivot_wider(names_from = name, values_from = value)
 
-save(wide_df_binomial, file="/home/lyqian/BIOSTAT815/res_binomial.Rda")
+#save(wide_df_binomial, file="/home/lyqian/BIOSTAT815/res_binomial.Rda")
 
 # Gaussian
 

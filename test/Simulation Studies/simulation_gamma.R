@@ -80,5 +80,5 @@ wide_df_gamma <- df_gamma %>%
   select(replicate, name, value) %>%
   pivot_wider(names_from = name, values_from = value)
 
-save(wide_df_gamma, file="/home/lyqian/BIOSTAT815/res_gamma.Rda")
+#save(wide_df_gamma, file="/home/lyqian/BIOSTAT815/res_gamma.Rda")
 

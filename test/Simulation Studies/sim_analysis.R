@@ -46,7 +46,7 @@ ggplot(df_long[df_long$metrics=="Time", ], aes(x = factor(family), y = y_value, 
   geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.7) +
   facet_wrap(~family, scales = "free", nrow=1) +
   guides(fill = guide_legend(byrow = TRUE, nrow = 1)) +
-  labs(y = "Time", fill = "Method", 
+  labs(y = "Time (ms)", fill = "Method", 
        x = "") +
   theme(legend.position = "bottom", 
         axis.text.x = element_blank(),

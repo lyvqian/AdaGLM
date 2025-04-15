@@ -118,10 +118,11 @@ Rcpp::List run_optimizer(const arma::mat& X, const arma::vec& y,
         
         arma::vec theta_old = theta;
         theta -= update;
+        count += 1; 
 
         if (arma::norm(theta-theta_old, 2) < cfg.epsilon) break;
       }
-      count += 1; 
+      
     }
   }
   
