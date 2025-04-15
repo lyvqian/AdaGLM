@@ -37,21 +37,27 @@ run_simulation_binomial <- function(){
   # Fit GLM
   family = "binomial_logit"
   bench <- suppressWarnings(microbenchmark(
-    beta_adam <- adaglm(X_dense,y,fam_link = family, optimizer = "ADAM", alpha=0.001),
-    beta_adagrad <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1),
-    beta_adadelta <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaDelta"),
-    beta_adasmooth <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001),
+    beta_adam <- adaglm(X_dense,y,fam_link = family, max_iter = 10000, optimizer = "ADAM", alpha=0.001),
+    beta_adagrad <- adaglm(X_dense,y,fam_link = family, max_iter = 10000, optimizer = "AdaGrad", alpha=0.1),
+    beta_adadelta <- adaglm(X_dense,y,fam_link = family, max_iter = 10000, optimizer = "AdaDelta"),
+    beta_adasmooth <- adaglm(X_dense,y,fam_link = family, max_iter = 10000, optimizer = "AdaSmooth", alpha=0.001),
     beta_glm <- summary(glm(y~X_dense - 1, family = binomial()))$coef[,1],
     times = 1L
   ))
   
-  beta_adam <- adaglm(X_dense,y,fam_link = family, optimizer = "ADAM", alpha=0.001)
-  beta_adagrad <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1)
-  beta_adadelta <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaDelta")
-  beta_adasmooth <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001)
+  beta_adam <- adaglm(X_dense,y,fam_link = family, max_iter = 10000, optimizer = "ADAM", alpha=0.001)
+  beta_adagrad <- adaglm(X_dense,y,fam_link = family, max_iter = 10000, optimizer = "AdaGrad", alpha=0.1)
+  beta_adadelta <- adaglm(X_dense,y,fam_link = family, max_iter = 10000, optimizer = "AdaDelta")
+  beta_adasmooth <- adaglm(X_dense,y,fam_link = family, max_iter = 10000, optimizer = "AdaSmooth", alpha=0.001)
   beta_glm <- summary(glm(y~X_dense-1, family = binomial()))$coef[,1]
   
-  res_mat[,1] <- c(mse(beta_adam, beta_true), mse(beta_adagrad, beta_true), mse(beta_adadelta, beta_true), mse(beta_adasmooth, beta_true), mse(beta_glm, beta_true))
+  print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
+  
+  res_mat[,1] <- c(mse(beta_adam$coef, beta_true), 
+                   mse(beta_adagrad$coef, beta_true), 
+                   mse(beta_adadelta$coef, beta_true), 
+                   mse(beta_adasmooth$coef, beta_true), 
+                   mse(beta_glm, beta_true))
   res_mat[,2] <- summary(bench)$median
   
   return(res_mat)
@@ -70,7 +76,7 @@ wide_df_binomial <- df_binomial %>%
   dplyr::select(replicate, name, value) %>%
   pivot_wider(names_from = name, values_from = value)
 
-#save(wide_df_binomial, file="./test/res_binomial_small.Rda")
+save(wide_df_binomial, file="./test/Simulation Studies/res_binomial_small.Rda")
 
 # Gaussian
 
@@ -95,21 +101,27 @@ run_simulation_gaussian <- function(){
   # Fit GLM
   family = "gaussian_identity"
   bench <- suppressWarnings(microbenchmark(
-    beta_adam <- adaglm(X_dense,y,fam_link = family, optimizer = "ADAM", alpha=0.001),
-    beta_adagrad <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaGrad", alpha = 0.1),
-    beta_adadelta <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaDelta"),
-    beta_adasmooth <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001),
+    beta_adam <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "ADAM", alpha=0.001),
+    beta_adagrad <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaGrad", alpha = 0.1),
+    beta_adadelta <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaDelta"),
+    beta_adasmooth <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaSmooth", alpha=0.001),
     beta_glm <- summary(glm(y~X_dense - 1, family = gaussian()))$coef[,1],
     times = 1L
   ))
   
-  beta_adam <- adaglm(X_dense,y,fam_link = family, optimizer = "ADAM", alpha=0.001)
-  beta_adagrad <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaGrad", alpha = 0.1)
-  beta_adadelta <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaDelta")
-  beta_adasmooth <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001)
+  beta_adam <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "ADAM", alpha=0.001)
+  beta_adagrad <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaGrad", alpha = 0.1)
+  beta_adadelta <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaDelta")
+  beta_adasmooth <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaSmooth", alpha=0.001)
   beta_glm <- summary(glm(y~X_dense-1, family = gaussian()))$coef[,1]
   
-  res_mat[,1] <- c(mse(beta_adam, beta_true), mse(beta_adagrad, beta_true), mse(beta_adadelta, beta_true), mse(beta_adasmooth, beta_true), mse(beta_glm, beta_true))
+  print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
+  
+  res_mat[,1] <- c(mse(beta_adam$coef, beta_true), 
+                   mse(beta_adagrad$coef, beta_true), 
+                   mse(beta_adadelta$coef, beta_true), 
+                   mse(beta_adasmooth$coef, beta_true), 
+                   mse(beta_glm, beta_true))
   res_mat[,2] <- summary(bench)$median
   
   return(res_mat)
@@ -128,7 +140,7 @@ wide_df_gaussian <- df_gaussian %>%
   dplyr::select(replicate, name, value) %>%
   pivot_wider(names_from = name, values_from = value)
 
-#save(wide_df_gaussian, file="./test/res_gaussian_small.Rda")
+save(wide_df_gaussian, file="./test/Simulation Studies/res_gaussian_small.Rda")
 
 
 # Poisson
@@ -155,21 +167,27 @@ run_simulation_poisson <- function(){
   # Fit GLM
   family = "poisson_log"
   bench <- suppressWarnings(microbenchmark(
-    beta_adam <- adaglm(X_dense,y,fam_link = family, optimizer = "ADAM", alpha=0.001),
-    beta_adagrad <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1),
-    beta_adadelta <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaDelta"),
-    beta_adasmooth <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001),
+    beta_adam <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "ADAM", alpha=0.001),
+    beta_adagrad <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaGrad", alpha=0.1),
+    beta_adadelta <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaDelta"),
+    beta_adasmooth <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaSmooth", alpha=0.001),
     beta_glm <- summary(glm(y~X_dense - 1, family = poisson()))$coef[,1],
     times = 1L
   ))
   
-  beta_adam <- adaglm(X_dense,y,fam_link = family, optimizer = "ADAM", alpha=0.001)
-  beta_adagrad <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1)
-  beta_adadelta <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaDelta")
-  beta_adasmooth <- adaglm(X_dense,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001)
+  beta_adam <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "ADAM", alpha=0.001)
+  beta_adagrad <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaGrad", alpha=0.1)
+  beta_adadelta <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaDelta")
+  beta_adasmooth <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaSmooth", alpha=0.001)
   beta_glm <- summary(glm(y~X_dense-1, family = poisson()))$coef[,1]
   
-  res_mat[,1] <- c(mse(beta_adam, beta_true), mse(beta_adagrad, beta_true), mse(beta_adadelta, beta_true), mse(beta_adasmooth, beta_true), mse(beta_glm, beta_true))
+  print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
+  
+  res_mat[,1] <- c(mse(beta_adam$coef, beta_true), 
+                   mse(beta_adagrad$coef, beta_true), 
+                   mse(beta_adadelta$coef, beta_true), 
+                   mse(beta_adasmooth$coef, beta_true),
+                   mse(beta_glm, beta_true))
   res_mat[,2] <- summary(bench)$median
   
   return(res_mat)
@@ -188,7 +206,7 @@ wide_df_poisson <- df_poisson %>%
   dplyr::select(replicate, name, value) %>%
   pivot_wider(names_from = name, values_from = value)
 
-#save(wide_df_poisson, file="./test/res_poisson_small.Rda")
+save(wide_df_poisson, file="./test/Simulation Studies/res_poisson_small.Rda")
 
 # Gamma
 
@@ -210,10 +228,10 @@ run_simulation_gamma <- function(){
   # Fit GLM
   family = "Gamma_log"
   bench <- suppressWarnings(microbenchmark(
-    beta_adam <- adaglm(X,y,fam_link = family, optimizer = "ADAM", alpha=0.001),
-    beta_adagrad <- adaglm(X,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1),
-    beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta"),
-    beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001),
+    beta_adam <- adaglm(X,y,fam_link = family,max_iter = 10000, optimizer = "ADAM", alpha=0.001),
+    beta_adagrad <- adaglm(X,y,fam_link = family,max_iter = 10000, optimizer = "AdaGrad", alpha=0.1),
+    beta_adadelta <- adaglm(X,y,fam_link = family,max_iter = 10000, optimizer = "AdaDelta"),
+    beta_adasmooth <- adaglm(X,y,fam_link = family,max_iter = 10000, optimizer = "AdaSmooth", alpha=0.001),
     beta_glm <- summary(glm(y ~ X - 1, family = Gamma(link="log")))$coef[,1],
     times = 1L
   ))
@@ -231,18 +249,24 @@ run_simulation_gamma <- function(){
     })
   })[["elapsed"]]
 
-  beta_adam <- adaglm(X,y,fam_link = family, optimizer = "ADAM", alpha=0.001)
-  beta_adagrad <- adaglm(X,y,fam_link = family, optimizer = "AdaGrad", alpha=0.1)
-  beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta")
-  beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth", alpha=0.001)
+  beta_adam <- adaglm(X,y,fam_link = family,max_iter = 10000, optimizer = "ADAM", alpha=0.001)
+  beta_adagrad <- adaglm(X,y,fam_link = family,max_iter = 10000, optimizer = "AdaGrad", alpha=0.1)
+  beta_adadelta <- adaglm(X,y,fam_link = family,max_iter = 10000, optimizer = "AdaDelta")
+  beta_adasmooth <- adaglm(X,y,fam_link = family,max_iter = 10000, optimizer = "AdaSmooth", alpha=0.001)
   beta_glm <- tryCatch({
     coef(glm(y ~ X - 1, family = Gamma(link = "log")))
   }, error = function(e) {
     warning("GLM failed to converge: ", conditionMessage(e))
     rep(NA, p)
   })
+  
+  print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
 
-  res_mat[,1] <- c(mse(beta_adam, beta_true), mse(beta_adagrad, beta_true), mse(beta_adadelta, beta_true), mse(beta_adasmooth, beta_true), mse(beta_glm, beta_true))
+  res_mat[,1] <- c(mse(beta_adam$coef, beta_true), 
+                   mse(beta_adagrad$coef, beta_true), 
+                   mse(beta_adadelta$coef, beta_true), 
+                   mse(beta_adasmooth$coef, beta_true),
+                   mse(beta_glm, beta_true))
   res_mat[,2] <- c(summary(bench)$median)
 
   return(res_mat)
@@ -261,6 +285,6 @@ wide_df_gamma <- df_gamma %>%
   dplyr::select(replicate, name, value) %>%
   pivot_wider(names_from = name, values_from = value)
 
-#save(wide_df_gamma, file="./test/res_gamma_small.Rda")
+save(wide_df_gamma, file="./test/Simulation Studies/res_gamma_small.Rda")
 
 

@@ -25,7 +25,7 @@ struct OptimizerConfig {
   int M = 10;
 };
 
-arma::vec run_optimizer(const arma::mat& X, const arma::vec& y,
+Rcpp::List run_optimizer(const arma::mat& X, const arma::vec& y,
                         Family* family, const OptimizerConfig& cfg) {
   int n = X.n_rows;
   int p = X.n_cols;
@@ -42,6 +42,7 @@ arma::vec run_optimizer(const arma::mat& X, const arma::vec& y,
   
   arma::vec et = arma::zeros(p); // for AdaSmooth
   
+  int count = 0; 
   for (int iter = 0; iter < cfg.max_iter; iter++) {
     arma::vec eta = X * theta;
     arma::vec mu = family->inverse_link(eta);
@@ -61,6 +62,8 @@ arma::vec run_optimizer(const arma::mat& X, const arma::vec& y,
       arma::vec theta_old = theta;
       theta -= update;
       
+      count += 1; 
+      
       if (arma::norm(theta - theta_old, 2) < cfg.epsilon)
         break;
       
@@ -72,6 +75,8 @@ arma::vec run_optimizer(const arma::mat& X, const arma::vec& y,
       
       arma::vec theta_old = theta;
       theta -= update;
+      
+      count += 1; 
       
       if (arma::norm(theta - theta_old, 2) < cfg.epsilon)
         break;
@@ -85,6 +90,8 @@ arma::vec run_optimizer(const arma::mat& X, const arma::vec& y,
       update = delta_theta;
       arma::vec theta_old = theta;
       theta -= update;
+      
+      count += 1; 
       
       if (arma::norm(theta - theta_old, 2) < cfg.epsilon)
         break;
@@ -114,10 +121,14 @@ arma::vec run_optimizer(const arma::mat& X, const arma::vec& y,
 
         if (arma::norm(theta-theta_old, 2) < cfg.epsilon) break;
       }
+      count += 1; 
     }
   }
   
-  return theta;
+  return Rcpp::List::create(
+    Rcpp::Named("coef") = theta,
+    Rcpp::Named("iter") = count
+  );
 }
 
 #endif

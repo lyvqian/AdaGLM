@@ -41,7 +41,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // adaglm
-arma::vec adaglm(const arma::mat& X, const arma::vec& y, std::string fam_link, std::string optimizer, double alpha, double rho, int max_iter, double tol);
+Rcpp::List adaglm(const arma::mat& X, const arma::vec& y, std::string fam_link, std::string optimizer, double alpha, double rho, int max_iter, double tol);
 RcppExport SEXP _AdaGLM_adaglm(SEXP XSEXP, SEXP ySEXP, SEXP fam_linkSEXP, SEXP optimizerSEXP, SEXP alphaSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

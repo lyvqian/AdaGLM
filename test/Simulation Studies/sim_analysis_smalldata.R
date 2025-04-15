@@ -1,7 +1,7 @@
-load("./test/res_binomial_small.Rda")
-load("./test/res_gaussian_small.Rda")
-load("./test/res_poisson_small.Rda")
-load("./test/res_gamma_small.Rda")
+load("./test/Simulation Studies/res_binomial_small.Rda")
+load("./test/Simulation Studies/res_gaussian_small.Rda")
+load("./test/Simulation Studies/res_poisson_small.Rda")
+load("./test/Simulation Studies/res_gamma_small.Rda")
 
 library(ggplot2)
 library(dplyr)
@@ -39,7 +39,7 @@ ggplot(df_long[df_long$metrics=="MSE", ], aes(x = factor(family), y = y_value, f
         strip.text = element_text(size = 14, face = "bold"),
         legend.text = element_text(size = 12)) 
 
-#ggsave("./test/simulate_smalldata.jpg", dpi=600)
+ggsave("./test/Simulation Studies/simulate_smalldata.jpg", dpi=600)
 
 ggplot(df_long[df_long$metrics=="Time", ], aes(x = factor(family), y = y_value, fill=Method)) +  
   geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.7) +
@@ -55,4 +55,4 @@ ggplot(df_long[df_long$metrics=="Time", ], aes(x = factor(family), y = y_value, 
         strip.text = element_text(size = 14, face = "bold"),
         legend.text = element_text(size = 12)) 
 
-#ggsave("./test/simulate_smalldata_time.jpg", dpi=600)
+ggsave("./test/Simulation Studies/simulate_smalldata_time.jpg", dpi=600)

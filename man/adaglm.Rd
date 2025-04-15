@@ -5,7 +5,7 @@
 \title{Fit generalized linear models with adaptive learning rate algorithm}
 \usage{
 adaglm(X, y, fam_link = "binomial_logit", optimizer = "ADAM", 
-alpha = 0.01, rho = 0.99, max_iter = 1000, tol = 1e-6)
+alpha = 0.01, rho = 0.99, max_iter = 10000, tol = 1e-6)
 }
 \arguments{
 \item{X}{a matrix of predictors}
@@ -40,8 +40,8 @@ If intercept is needed, a column of 1's has to be manually added to X.
 
 ## An example for Binomial-logit: Use the R built-in "mtcars" dataset
 if (requireNamespace("dplyr", quietly = TRUE) && requireNamespace("microbenchmark", quietly = TRUE)) {
-suppressPackageStartupMessages(library(dplyr))
-suppressPackageStartupMessages(library(microbenchmark))
+library(dplyr)
+library(microbenchmark)
 
 data(mtcars)
 X = mtcars \%>\% mutate(intercept = rep(1,nrow(mtcars))) \%>\% 
@@ -64,23 +64,23 @@ exec_time_mtcars = summary(bench)$median
 names(exec_time_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 exec_time_mtcars
   
-beta_mat <- cbind(beta_adam, beta_adagrad, beta_adadelta, beta_adasmooth, as.numeric(beta_glm))
+beta_mat <- cbind(beta_adam$coef, beta_adagrad$coef, beta_adadelta$coef, beta_adasmooth$coef, as.numeric(beta_glm))
 colnames(beta_mat) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 beta_mat
   
-loglik_mtcars = c(LogLik(X,y,fam_link = family, beta = beta_adam),
-      LogLik(X,y,fam_link = family, beta = beta_adagrad),
-      LogLik(X,y,fam_link = family, beta = beta_adadelta),
-      LogLik(X,y,fam_link = family, beta = beta_adasmooth),
+loglik_mtcars = c(LogLik(X,y,fam_link = family, beta = beta_adam$coef),
+      LogLik(X,y,fam_link = family, beta = beta_adagrad$coef),
+      LogLik(X,y,fam_link = family, beta = beta_adadelta$coef),
+      LogLik(X,y,fam_link = family, beta = beta_adasmooth$coef),
       LogLik(X,y,fam_link = family, beta = beta_glm))
       
 names(loglik_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 loglik_mtcars
 
-Deviance_mtcars = c(Deviance(X,y,fam_link = family, beta = beta_adam),
-                    Deviance(X,y,fam_link = family, beta = beta_adagrad),
-                    Deviance(X,y,fam_link = family, beta = beta_adadelta),
-                    Deviance(X,y,fam_link = family, beta = beta_adasmooth),
+Deviance_mtcars = c(Deviance(X,y,fam_link = family, beta = beta_adam$coef),
+                    Deviance(X,y,fam_link = family, beta = beta_adagrad$coef),
+                    Deviance(X,y,fam_link = family, beta = beta_adadelta$coef),
+                    Deviance(X,y,fam_link = family, beta = beta_adasmooth$coef),
                     Deviance(X,y,fam_link = family, beta = beta_glm))
 names(Deviance_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 Deviance_mtcars
@@ -114,24 +114,24 @@ exec_time_quine = summary(bench)$median
 names(exec_time_quine) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 exec_time_quine
 
-beta_mat <- cbind(beta_adam, 
-beta_adagrad, beta_adadelta, 
-beta_adasmooth, as.numeric(beta_glm))
+beta_mat <- cbind(beta_adam$coef, 
+beta_adagrad$coef, beta_adadelta$coef, 
+beta_adasmooth$coef, as.numeric(beta_glm))
 colnames(beta_mat) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 beta_mat
 
-loglik_quine = c(LogLik(X,y,fam_link = family, beta = beta_adam),
-                LogLik(X,y,fam_link = family, beta = beta_adagrad),
-                LogLik(X,y,fam_link = family, beta = beta_adadelta),
-                LogLik(X,y,fam_link = family, beta = beta_adasmooth),
+loglik_quine = c(LogLik(X,y,fam_link = family, beta = beta_adam$coef),
+                LogLik(X,y,fam_link = family, beta = beta_adagrad$coef),
+                LogLik(X,y,fam_link = family, beta = beta_adadelta$coef),
+                LogLik(X,y,fam_link = family, beta = beta_adasmooth$coef),
                 LogLik(X,y,fam_link = family, beta = beta_glm))
                 names(loglik_quine) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 loglik_quine
 
-Deviance_quine = c(Deviance(X,y,fam_link = family, beta = beta_adam),
-                 Deviance(X,y,fam_link = family, beta = beta_adagrad),
-                 Deviance(X,y,fam_link = family, beta = beta_adadelta),
-                 Deviance(X,y,fam_link = family, beta = beta_adasmooth),
+Deviance_quine = c(Deviance(X,y,fam_link = family, beta = beta_adam$coef),
+                 Deviance(X,y,fam_link = family, beta = beta_adagrad$coef),
+                 Deviance(X,y,fam_link = family, beta = beta_adadelta$coef),
+                 Deviance(X,y,fam_link = family, beta = beta_adasmooth$coef),
                  Deviance(X,y,fam_link = family, beta = beta_glm))
                  names(Deviance_quine) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 Deviance_quine
@@ -158,23 +158,23 @@ exec_time_mtcars = summary(bench)$median
 names(exec_time_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 exec_time_mtcars
   
-beta_mat <- cbind(beta_adam, beta_adagrad, beta_adadelta, beta_adasmooth, as.numeric(beta_glm))
+beta_mat <- cbind(beta_adam$coef, beta_adagrad$coef, beta_adadelta$coef, beta_adasmooth$coef, as.numeric(beta_glm))
 colnames(beta_mat) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 beta_mat
   
-loglik_mtcars = c(LogLik(X,y,fam_link = family, beta = beta_adam),
-      LogLik(X,y,fam_link = family, beta = beta_adagrad),
-      LogLik(X,y,fam_link = family, beta = beta_adadelta),
-      LogLik(X,y,fam_link = family, beta = beta_adasmooth),
+loglik_mtcars = c(LogLik(X,y,fam_link = family, beta = beta_adam$coef),
+      LogLik(X,y,fam_link = family, beta = beta_adagrad$coef),
+      LogLik(X,y,fam_link = family, beta = beta_adadelta$coef),
+      LogLik(X,y,fam_link = family, beta = beta_adasmooth$coef),
       LogLik(X,y,fam_link = family, beta = beta_glm))
       
 names(loglik_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 loglik_mtcars
 
-Deviance_mtcars = c(Deviance(X,y,fam_link = family, beta = beta_adam),
-                    Deviance(X,y,fam_link = family, beta = beta_adagrad),
-                    Deviance(X,y,fam_link = family, beta = beta_adadelta),
-                    Deviance(X,y,fam_link = family, beta = beta_adasmooth),
+Deviance_mtcars = c(Deviance(X,y,fam_link = family, beta = beta_adam$coef),
+                    Deviance(X,y,fam_link = family, beta = beta_adagrad$coef),
+                    Deviance(X,y,fam_link = family, beta = beta_adadelta$coef),
+                    Deviance(X,y,fam_link = family, beta = beta_adasmooth$coef),
                     Deviance(X,y,fam_link = family, beta = beta_glm))
 names(Deviance_mtcars) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 Deviance_mtcars
@@ -202,21 +202,21 @@ exec_time_insurance = summary(bench)$median
 names(exec_time_insurance) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 exec_time_insurance
   
-beta_mat <- cbind(beta_adam, beta_adagrad, beta_adadelta, beta_adasmooth, as.numeric(beta_glm))
+beta_mat <- cbind(beta_adam$coef, beta_adagrad$coef, beta_adadelta$coef, beta_adasmooth$coef, as.numeric(beta_glm))
 colnames(beta_mat) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 beta_mat
-loglik_insurance = c(LogLik(X,y,fam_link = family, beta = beta_adam),
-                      LogLik(X,y,fam_link = family, beta = beta_adagrad),
-                      LogLik(X,y,fam_link = family, beta = beta_adadelta),
-                      LogLik(X,y,fam_link = family, beta = beta_adasmooth),
+loglik_insurance = c(LogLik(X,y,fam_link = family, beta = beta_adam$coef),
+                      LogLik(X,y,fam_link = family, beta = beta_adagrad$coef),
+                      LogLik(X,y,fam_link = family, beta = beta_adadelta$coef),
+                      LogLik(X,y,fam_link = family, beta = beta_adasmooth$coef),
                       LogLik(X,y,fam_link = family, beta = beta_glm))
 names(loglik_insurance) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 loglik_insurance
   
-Deviance_insurance = c(Deviance(X,y,fam_link = family, beta = beta_adam),
-                        Deviance(X,y,fam_link = family, beta = beta_adagrad),
-                        Deviance(X,y,fam_link = family, beta = beta_adadelta),
-                        Deviance(X,y,fam_link = family, beta = beta_adasmooth),
+Deviance_insurance = c(Deviance(X,y,fam_link = family, beta = beta_adam$coef),
+                        Deviance(X,y,fam_link = family, beta = beta_adagrad$coef),
+                        Deviance(X,y,fam_link = family, beta = beta_adadelta$coef),
+                        Deviance(X,y,fam_link = family, beta = beta_adasmooth$coef),
                         Deviance(X,y,fam_link = family, beta = beta_glm))
 names(Deviance_insurance) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 Deviance_insurance
