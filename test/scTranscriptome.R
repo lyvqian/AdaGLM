@@ -29,12 +29,17 @@ ggplot(df, aes(x = PC, y = CumulativeVariance)) +
   theme_minimal()
 X = pca$x[,1:48]
 
+variances <- apply(data, 2, var)
+colnames(data) = gene
+X = as.matrix(data[,-which(variances < 18)])
+
+
 family = "binomial_logit"
 bench <- suppressWarnings(microbenchmark(
-  beta_adagrad <- adaglm(X,y,fam_link = family, optimizer = "AdaGrad"),
-  beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta"),
-  beta_adam <- adaglm(X,y,fam_link = family, optimizer = "ADAM"),
-  beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth"),
+  beta_adagrad <- adaglm(X,y,fam_link = family, optimizer = "AdaGrad")$coef,
+  beta_adadelta <- adaglm(X,y,fam_link = family, optimizer = "AdaDelta")$coef,
+  beta_adam <- adaglm(X,y,fam_link = family, optimizer = "ADAM")$coef,
+  beta_adasmooth <- adaglm(X,y,fam_link = family, optimizer = "AdaSmooth")$coef,
   beta_glm <- glm(y~X-1, family = binomial())$coef,
   beta_sgd <- sgd(y~X-1, model = "glm", model.control = list(family = binomial()),
                   sgd.control = list(method = "sgd", lr = "adagrad", lr.control = c(0.01, 1e-6)))$coef,
@@ -49,7 +54,6 @@ exec_time
 
 beta_mat <- cbind(beta_adagrad, beta_adadelta, beta_adam, beta_adasmooth, beta_glm, beta_sgd)
 colnames(beta_mat) = c("AdaGrad", "AdaDelta", "ADAM", "AdaSmooth", "glm_fn", "sgd")
-beta_mat
 
 acc_adadelta = 1-sum(abs(ifelse(1/(1+exp(-X %*% beta_adadelta)) > 0.5, 1, 0) - y))/length(y)
 acc_adam = 1-sum(abs(ifelse(1/(1+exp(-X %*% beta_adam)) > 0.5, 1, 0) - y))/length(y)
@@ -81,3 +85,17 @@ print(xtable(as.data.frame(t(loglik))), include.rownames = FALSE)
 # names(Deviance_depression) = c("ADAM", "AdaGrad", "AdaDelta", "AdaSmooth", "glm_fn")
 # Deviance_depression
 
+V <- pca$rotation[, 1:48] 
+gene_contrib <- V %*% beta_adam
+top_pos <- sort(gene_contrib[,1], decreasing = TRUE)[1:10]  # most positively associated
+top_neg <- sort(gene_contrib[,1], decreasing = FALSE)[1:10] # most negatively associated
+top_pos
+top_neg
+
+
+gene_select = gene[which(variances >= 18)]
+rownames(beta_adagrad) = gene_select
+top_pos <- sort(beta_adagrad[,1], decreasing = TRUE)[1:10]  # most positively associated
+top_neg <- sort(beta_adagrad[,1], decreasing = FALSE)[1:10] # most negatively associated
+top_pos
+top_neg
