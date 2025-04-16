@@ -29,9 +29,9 @@ ggplot(df, aes(x = PC, y = CumulativeVariance)) +
   theme_minimal()
 X = pca$x[,1:48]
 
-variances <- apply(data, 2, var)
-colnames(data) = gene
-X = as.matrix(data[,-which(variances < 18)])
+# variances <- apply(data, 2, var)
+# colnames(data) = gene
+# X = as.matrix(data[,-which(variances < 18)])
 
 
 family = "binomial_logit"
@@ -87,15 +87,34 @@ print(xtable(as.data.frame(t(loglik))), include.rownames = FALSE)
 
 V <- pca$rotation[, 1:48] 
 gene_contrib <- V %*% beta_adam
+gene_name = sub("^[^_]*_([^_]*)_.*$", "\\1", gene)
+row.names(gene_contrib) = gene_name
 top_pos <- sort(gene_contrib[,1], decreasing = TRUE)[1:10]  # most positively associated
 top_neg <- sort(gene_contrib[,1], decreasing = FALSE)[1:10] # most negatively associated
 top_pos
 top_neg
 
+df = data.frame(name = names(top_pos), value = as.numeric(top_pos))
+df$name <- factor(df$name, levels = df$name[order(df$value)])
+ggplot(df, 
+       aes(x = value, y = name)) +
+  geom_col(fill = "#00274C") +
+  labs(x = "Beta", y = "Features", title = "Top Positive Beta") +
+  theme_bw()
+ggsave(file = "top_pos.png", width = 4, height = 4)
 
-gene_select = gene[which(variances >= 18)]
-rownames(beta_adagrad) = gene_select
-top_pos <- sort(beta_adagrad[,1], decreasing = TRUE)[1:10]  # most positively associated
-top_neg <- sort(beta_adagrad[,1], decreasing = FALSE)[1:10] # most negatively associated
-top_pos
-top_neg
+df = data.frame(name = names(top_neg), value = as.numeric(top_neg))
+df$name <- factor(df$name, levels = df$name[order(df$value, decreasing = T)])
+ggplot(df, 
+       aes(x = value, y = name)) +
+  geom_col(fill = "#00274C") +
+  labs(x = "Beta", y = "Features", title = "Top Negative Beta") +
+  theme_bw()
+ggsave(file = "top_neg.png", width = 4, height = 4)
+
+# gene_select = gene[which(variances >= 18)]
+# rownames(beta_adagrad) = gene_select
+# top_pos <- sort(beta_adagrad[,1], decreasing = TRUE)[1:10]  # most positively associated
+# top_neg <- sort(beta_adagrad[,1], decreasing = FALSE)[1:10] # most negatively associated
+# top_pos
+# top_neg
