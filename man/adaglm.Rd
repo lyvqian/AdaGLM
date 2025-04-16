@@ -5,7 +5,7 @@
 \title{Fit generalized linear models with adaptive learning rate algorithm}
 \usage{
 adaglm(X, y, fam_link = "binomial_logit", optimizer = "ADAM", 
-alpha = 0.01, rho = 0.99, max_iter = 10000, tol = 1e-6)
+alpha = 0.01, rho = 0.99, max_iter = 1000, tol = 1e-6)
 }
 \arguments{
 \item{X}{a matrix of predictors}
@@ -25,7 +25,7 @@ alpha = 0.01, rho = 0.99, max_iter = 10000, tol = 1e-6)
 \item{tol}{tolerence}
 }
 \value{
-A vector of estimated regression coefficients
+
 }
 \description{
 adaglm( ) fits generalized linear models with a self-defined adaptive learning rate algorithm and stepsize. Default is ADAM with alpha=0.01.

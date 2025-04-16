@@ -16,7 +16,7 @@ Deviance <- function(X, y, beta, fam_link) {
 #' @description adaglm( ) fits generalized linear models with a self-defined adaptive learning rate algorithm and stepsize. Default is ADAM with alpha=0.01.   
 #'
 #' @usage adaglm(X, y, fam_link = "binomial_logit", optimizer = "ADAM", 
-#' alpha = 0.01, rho = 0.99, max_iter = 10000, tol = 1e-6)
+#' alpha = 0.01, rho = 0.99, max_iter = 1000, tol = 1e-6)
 #'
 #' @param X  a matrix of predictors
 #' @param y  a vector of responses
@@ -31,7 +31,9 @@ Deviance <- function(X, y, beta, fam_link) {
 #' The number of rows of X must match the length of y.
 #' If intercept is needed, a column of 1's has to be manually added to X.
 #'
-#' @return A vector of estimated regression coefficients 
+#' @return \describe{
+#'   \item{coef}{A numeric vector of estimated regression coefficients.}
+#'   \item{iter}{An interger indicating the number of iterations.}
 #'
 #'
 #' @examples
