@@ -25,7 +25,11 @@ alpha = 0.01, rho = 0.99, max_iter = 1000, tol = 1e-6)
 \item{tol}{tolerence}
 }
 \value{
-
+A list with the following components:
+\describe{
+  \item{coef}{A numeric vector of estimated regression coefficients.}
+  \item{iter}{An interger indicating the number of iterations.}
+}
 }
 \description{
 adaglm( ) fits generalized linear models with a self-defined adaptive learning rate algorithm and stepsize. Default is ADAM with alpha=0.01.

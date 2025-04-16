@@ -31,10 +31,11 @@ Deviance <- function(X, y, beta, fam_link) {
 #' The number of rows of X must match the length of y.
 #' If intercept is needed, a column of 1's has to be manually added to X.
 #'
-#' @return \describe{
+#' @return A list with the following components:
+#' \describe{
 #'   \item{coef}{A numeric vector of estimated regression coefficients.}
 #'   \item{iter}{An interger indicating the number of iterations.}
-#'
+#' }
 #'
 #' @examples
 #' 
