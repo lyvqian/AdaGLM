@@ -6,7 +6,7 @@ load("./test/Simulation Studies/res_gamma_small.Rda")
 library(ggplot2)
 library(dplyr)
 
-wide_df_poisson<-wide_df_poisson[wide_df_poisson$adadelta_MSE<10,]
+wide_df_poisson<-wide_df_poisson[wide_df_poisson$adadelta_MSE<0.1,]
 wide_df_gamma<-wide_df_gamma[wide_df_gamma$adadelta_MSE<10,]
 
 df <- as.data.frame(rbind(wide_df_binomial, wide_df_gaussian, wide_df_poisson, wide_df_gamma))
@@ -37,7 +37,8 @@ ggplot(df_long[df_long$metrics=="MSE", ], aes(x = factor(family), y = y_value, f
         plot.title = element_text(hjust=0.5, size=12),
         axis.title = element_text(size = 14),
         strip.text = element_text(size = 14, face = "bold"),
-        legend.text = element_text(size = 12)) 
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14)) 
 
 ggsave("./test/Simulation Studies/simulate_smalldata.jpg", dpi=600)
 
@@ -53,6 +54,7 @@ ggplot(df_long[df_long$metrics=="Time", ], aes(x = factor(family), y = y_value, 
         plot.title = element_text(hjust=0.5, size=12),
         axis.title = element_text(size = 14),
         strip.text = element_text(size = 14, face = "bold"),
-        legend.text = element_text(size = 12)) 
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14)) 
 
 ggsave("./test/Simulation Studies/simulate_smalldata_time.jpg", dpi=600)

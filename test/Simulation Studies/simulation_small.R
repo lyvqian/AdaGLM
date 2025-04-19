@@ -51,7 +51,7 @@ run_simulation_binomial <- function(){
   beta_adasmooth <- adaglm(X_dense,y,fam_link = family, max_iter = 10000, optimizer = "AdaSmooth", alpha=0.001)
   beta_glm <- summary(glm(y~X_dense-1, family = binomial()))$coef[,1]
   
-  print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
+  #print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
   
   res_mat[,1] <- c(mse(beta_adam$coef, beta_true), 
                    mse(beta_adagrad$coef, beta_true), 
@@ -115,7 +115,7 @@ run_simulation_gaussian <- function(){
   beta_adasmooth <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaSmooth", alpha=0.001)
   beta_glm <- summary(glm(y~X_dense-1, family = gaussian()))$coef[,1]
   
-  print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
+  #print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
   
   res_mat[,1] <- c(mse(beta_adam$coef, beta_true), 
                    mse(beta_adagrad$coef, beta_true), 
@@ -181,7 +181,7 @@ run_simulation_poisson <- function(){
   beta_adasmooth <- adaglm(X_dense,y,fam_link = family,max_iter = 10000, optimizer = "AdaSmooth", alpha=0.001)
   beta_glm <- summary(glm(y~X_dense-1, family = poisson()))$coef[,1]
   
-  print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
+  #print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
   
   res_mat[,1] <- c(mse(beta_adam$coef, beta_true), 
                    mse(beta_adagrad$coef, beta_true), 
@@ -260,7 +260,7 @@ run_simulation_gamma <- function(){
     rep(NA, p)
   })
   
-  print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
+  #print(c(beta_adam$iter, beta_adagrad$iter, beta_adadelta$iter, beta_adasmooth$iter))
 
   res_mat[,1] <- c(mse(beta_adam$coef, beta_true), 
                    mse(beta_adagrad$coef, beta_true), 

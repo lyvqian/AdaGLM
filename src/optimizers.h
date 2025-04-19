@@ -41,13 +41,26 @@ Rcpp::List run_optimizer(const arma::mat& X, const arma::vec& y,
   arma::vec deltaX2 = arma::zeros(p); // for AdaDelta
   
   arma::vec et = arma::zeros(p); // for AdaSmooth
+  arma::mat delta_theta = arma::zeros(p, cfg.M); // for AdaSmooth
   
   int count = 0; 
   for (int iter = 0; iter < cfg.max_iter; iter++) {
     arma::vec eta = X * theta;
     arma::vec mu = family->inverse_link(eta);
     arma::vec residual = y - mu;
-    arma::vec grad = X.t() * (mu - y) / n;
+    
+    arma::vec grad;
+    if (dynamic_cast<GaussianIdentity*>(family) || 
+        dynamic_cast<BinomialLogit*>(family) || 
+        dynamic_cast<PoissonLog*>(family)) {
+      
+      grad = X.t() * (mu - y) / n;
+      
+    } else if (dynamic_cast<GammaLog*>(family)) {
+      
+      grad = X.t() * (1.0 - y / mu) / n;
+      
+    }
     
     arma::vec update;
     if (cfg.method == ADAM) {
@@ -97,11 +110,7 @@ Rcpp::List run_optimizer(const arma::mat& X, const arma::vec& y,
         break;
       
     } else if (cfg.method == AdaSmooth){
-      arma::mat delta_theta = arma::zeros(p, cfg.M);
       for (int batch = 0; batch < cfg.M; batch++){
-        arma::vec eta = X * theta;
-        arma::vec mu = family->inverse_link(eta);
-        arma::vec grad = X.t() * (mu - y) / n;
         if(batch != 0){
           et = abs(sum(delta_theta, 1))/sum(abs(delta_theta), 1);
         }
