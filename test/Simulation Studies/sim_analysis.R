@@ -1,13 +1,14 @@
-load("./test/res_binomial.Rda")
-load("./test/res_gaussian.Rda")
-load("./test/res_poisson.Rda")
-load("./test/res_gamma.Rda")
+load("./test/Simulation Studies/res_binomial.Rda")
+load("./test/Simulation Studies/res_gaussian.Rda")
+load("./test/Simulation Studies/res_poisson.Rda")
+load("./test/Simulation Studies/res_gamma.Rda")
 
 library(ggplot2)
 library(dplyr)
+library(tidyr)
 
 wide_df_poisson<-wide_df_poisson[wide_df_poisson$adadelta_MSE<25,]
-wide_df_gamma<-wide_df_gamma[wide_df_gamma$adadelta_MSE<25,]
+#wide_df_gamma<-wide_df_gamma[wide_df_gamma$adadelta_MSE<25,]
 
 df <- as.data.frame(rbind(wide_df_binomial, wide_df_gaussian, wide_df_poisson, wide_df_gamma))
 df$family <- c(rep("binomial", nrow(wide_df_binomial)),
@@ -38,9 +39,9 @@ ggplot(df_long[df_long$metrics=="MSE", ], aes(x = factor(family), y = y_value, f
         axis.title = element_text(size = 14),
         strip.text = element_text(size = 14, face = "bold"),
         legend.text = element_text(size = 15),
-        legend.title = element_text(size = 12)) 
+        legend.title = element_text(size = 15)) 
 
-#ggsave("./test/simulate_sparse.jpg", dpi=600)
+ggsave("./test/Simulation Studies/simulate_sparse.jpg", dpi=600)
 
 ggplot(df_long[df_long$metrics=="Time", ], aes(x = factor(family), y = y_value, fill=Method)) +  
   geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.7) +
@@ -57,4 +58,4 @@ ggplot(df_long[df_long$metrics=="Time", ], aes(x = factor(family), y = y_value, 
         legend.text = element_text(size = 15),
         legend.title = element_text(size = 15)) 
 
-#ggsave("./test/simulate_sparse_time.jpg", dpi=600)
+ggsave("./test/Simulation Studies/simulate_sparse_time.jpg", dpi=600)

@@ -61,7 +61,11 @@ run_simulation_gamma <- function(){
     rep(NA, p)
   })
   
-  res_mat[,1] <- c(mse(beta_adam, beta_true), mse(beta_adagrad, beta_true), mse(beta_adadelta, beta_true), mse(beta_adasmooth, beta_true), mse(beta_glm, beta_true))
+  res_mat[,1] <- c(mse(beta_adam$coef, beta_true), 
+                   mse(beta_adagrad$coef, beta_true), 
+                   mse(beta_adadelta$coef, beta_true), 
+                   mse(beta_adasmooth$coef, beta_true), 
+                   mse(beta_glm, beta_true))
   res_mat[,2] <- c(summary(bench)$median)
   
   return(res_mat)
@@ -80,5 +84,5 @@ wide_df_gamma <- df_gamma %>%
   select(replicate, name, value) %>%
   pivot_wider(names_from = name, values_from = value)
 
-#save(wide_df_gamma, file="/home/lyqian/BIOSTAT815/res_gamma.Rda")
+save(wide_df_gamma, file="/home/lyqian/BIOSTAT815/res_gamma.Rda")
 

@@ -25,36 +25,58 @@ df_long <- df %>%
 
 df_long$Method = factor(df_long$Method, levels=c("adagrad", "adadelta", "adam", "adasmooth","glm"))
 
-ggplot(df_long[df_long$metrics=="MSE", ], aes(x = factor(family), y = y_value, fill=Method)) +  
+mse_plot <- ggplot(df_long[df_long$metrics=="MSE", ], aes(x = factor(family), y = y_value, fill=Method)) +  
   geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.7) +
   facet_wrap(~family, scales = "free", nrow=1) +
   guides(fill = guide_legend(byrow = TRUE, nrow = 1)) +
   labs(y = "MSE", fill = "Method", 
        x = "") +
-  theme(legend.position = "bottom", 
-        axis.text.x = element_blank(),
+  theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
-        plot.title = element_text(hjust=0.5, size=12),
-        axis.title = element_text(size = 14),
-        strip.text = element_text(size = 14, face = "bold"),
-        legend.text = element_text(size = 14),
-        legend.title = element_text(size = 14)) 
+        plot.title = element_text(hjust=0.5, size=15),
+        axis.title = element_text(size = 12),
+        strip.text = element_text(size = 12, face = "bold")) 
 
-ggsave("./test/Simulation Studies/simulate_smalldata.jpg", dpi=600)
+#ggsave("./test/Simulation Studies/simulate_smalldata.jpg", dpi=600, width=10, height=6)
 
-ggplot(df_long[df_long$metrics=="Time", ], aes(x = factor(family), y = y_value, fill=Method)) +  
+time_plot <- ggplot(df_long[df_long$metrics=="Time", ], aes(x = factor(family), y = y_value, fill=Method)) +  
   geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.7) +
   facet_wrap(~family, scales = "free", nrow=1) +
   guides(fill = guide_legend(byrow = TRUE, nrow = 1)) +
   labs(y = "Time (ms)", fill = "Method", 
        x = "") +
-  theme(legend.position = "bottom", 
-        axis.text.x = element_blank(),
+  theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
-        plot.title = element_text(hjust=0.5, size=12),
-        axis.title = element_text(size = 14),
-        strip.text = element_text(size = 14, face = "bold"),
-        legend.text = element_text(size = 14),
-        legend.title = element_text(size = 14)) 
+        plot.title = element_text(hjust=0.5, size=15),
+        axis.title = element_text(size = 12),
+        strip.text = element_text(size = 12, face = "bold")) 
 
-ggsave("./test/Simulation Studies/simulate_smalldata_time.jpg", dpi=600)
+#ggsave("./test/Simulation Studies/simulate_smalldata_time.jpg", dpi=600)
+
+mse_nolegend <- mse_plot + theme(legend.position = "none")
+time_nolegend <- time_plot + theme(legend.position = "none")
+
+combined_plot <- plot_grid(
+     mse_nolegend,
+     time_nolegend,
+     ncol = 1,
+     align = "v",
+     rel_heights = c(1, 1))
+combined_plot
+
+legend <- get_legend(mse_plot + theme(legend.position = "bottom", 
+                                      legend.text=element_text(size=15), 
+                                      legend.title=element_text(size=15)))
+
+final_plot <- plot_grid(
+  combined_plot,
+  legend,
+  ncol = 1,
+  rel_heights = c(1, 0.1)  
+)
+
+final_plot
+
+ggsave("./test/Simulation Studies/combinedplot_smalldata.jpg", dpi=600, width=10, height=10)
+
+
