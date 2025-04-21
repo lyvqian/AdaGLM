@@ -33,7 +33,7 @@ adaglm(X, y, fam_link = "binomial_logit", optimizer = "ADAM", alpha = 0.01, rho 
 
 `max_iter`: Maximum number of iterations
 
-`tol`: Tolerence (defining convergence)
+`tol`: Tolerence (defining convergence criteria)
 
 For more information and examples, see the help page:
 
