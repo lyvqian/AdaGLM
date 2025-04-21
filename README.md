@@ -11,3 +11,33 @@ The latest version of this package can be installed using
 devtools::install_github("lyvqian/AdaGLM")
 ```
 
+## Function
+
+The main function of this package is `adaglm()`
+
+```r
+adaglm(X, y, fam_link = "binomial_logit", optimizer = "ADAM", alpha = 0.01, rho = 0.99, max_iter = 1000, tol = 1e-6)
+```
+
+`X`: A matrix of predictors
+
+`y`: A vector of responses
+
+`fam_link`: One of "binomial_logit", "gaussian_identity", "Gamma_log", "poisson_log", meaning a distribution family and its corresponding link function
+
+`optimizer`: One of "ADAM", "AdaGrad", "AdaSmooth", "AdaDelta"
+
+`alpha`: Initial learning rate used in ADAM, AdaGrad, AdaSmooth
+
+`rho`: Decay rate used in AdaDelta
+
+`max_iter`: Maximum number of iterations
+
+`tol`: Tolerence (defining convergence)
+
+For more information and examples, see the help page:
+
+```r
+?adaglm
+```
+
