@@ -54,23 +54,23 @@ Rcpp::List run_optimizer(const arma::mat& X, const arma::vec& y,
         dynamic_cast<BinomialLogit*>(family) || 
         dynamic_cast<PoissonLog*>(family)) {
       
-      grad = X.t() * (mu - y) / n;
+      grad = X.t() * (mu - y) / n; // Link function for gaussian, binomial, poisson
       
     } else if (dynamic_cast<GammaLog*>(family)) {
       
-      grad = X.t() * (1.0 - y / mu) / n;
+      grad = X.t() * (1.0 - y / mu) / n; // Link function for gamma
       
     }
     
     arma::vec update;
     if (cfg.method == ADAM) {
-      m = cfg.beta1 * m + (1 - cfg.beta1) * grad;
-      v = cfg.beta2 * v + (1 - cfg.beta2) * arma::square(grad);
+      m = cfg.beta1 * m + (1 - cfg.beta1) * grad; // First moment estimate (biased)
+      v = cfg.beta2 * v + (1 - cfg.beta2) * arma::square(grad); // Second moment estimate (biased)
       
-      arma::vec m_hat = m / (1 - std::pow(cfg.beta1, iter+1));
-      arma::vec v_hat = v / (1 - std::pow(cfg.beta2, iter+1));
+      arma::vec m_hat = m / (1 - std::pow(cfg.beta1, iter+1)); // bias corrected 
+      arma::vec v_hat = v / (1 - std::pow(cfg.beta2, iter+1)); // bias corrected 
       
-      update = cfg.alpha * m_hat / (arma::sqrt(v_hat) + 1e-8);
+      update = cfg.alpha * m_hat / (arma::sqrt(v_hat) + 1e-8); 
       
       arma::vec theta_old = theta;
       theta -= update;
@@ -81,10 +81,10 @@ Rcpp::List run_optimizer(const arma::mat& X, const arma::vec& y,
         break;
       
     } else if (cfg.method == AdaGrad) { 
-      g_squared += arma::square(grad);
-      arma::vec adjusted_alpha = cfg.alpha / (arma::sqrt(g_squared) + cfg.epsilon);
+      g_squared += arma::square(grad); // Gt
+      arma::vec adjusted_alpha = cfg.alpha / (arma::sqrt(g_squared) + cfg.epsilon); // adjusted alpha
       
-      update = adjusted_alpha % grad;
+      update = adjusted_alpha % grad; 
       
       arma::vec theta_old = theta;
       theta -= update;
@@ -95,10 +95,10 @@ Rcpp::List run_optimizer(const arma::mat& X, const arma::vec& y,
         break;
       
     } else if (cfg.method == AdaDelta){
-      arma::vec gradient2 = grad % grad;
-      E_g2 = cfg.rho * E_g2 + (1 - cfg.rho) * gradient2;
-      arma::vec delta_theta = (sqrt(E_delta_theta2 + 1e-8) / sqrt(E_g2 + 1e-8)) % grad;
-      E_delta_theta2 = cfg.rho * E_delta_theta2 + (1 - cfg.rho) * (delta_theta % delta_theta);
+      arma::vec gradient2 = grad % grad; 
+      E_g2 = cfg.rho * E_g2 + (1 - cfg.rho) * gradient2; // Accumulate Gradient
+      arma::vec delta_theta = (sqrt(E_delta_theta2 + 1e-8) / sqrt(E_g2 + 1e-8)) % grad; // Update
+      E_delta_theta2 = cfg.rho * E_delta_theta2 + (1 - cfg.rho) * (delta_theta % delta_theta); // Accumulate Updates
       
       update = delta_theta;
       arma::vec theta_old = theta;
@@ -112,13 +112,13 @@ Rcpp::List run_optimizer(const arma::mat& X, const arma::vec& y,
     } else if (cfg.method == AdaSmooth){
       for (int batch = 0; batch < cfg.M; batch++){
         if(batch != 0){
-          et = abs(sum(delta_theta, 1))/sum(abs(delta_theta), 1);
+          et = abs(sum(delta_theta, 1))/sum(abs(delta_theta), 1); // Efficiency ratio
         }
-        arma::vec ct = (cfg.rho2 - cfg.rho1) * et + (1 - cfg.rho2);
+        arma::vec ct = (cfg.rho2 - cfg.rho1) * et + (1 - cfg.rho2); // Smoothing constant
         arma::vec ct2 = ct % ct;
         arma::vec gradient2 = grad % grad;
 
-        E_g2 = ct2 % gradient2 + (1 - ct2) % E_g2;
+        E_g2 = ct2 % gradient2 + (1 - ct2) % E_g2; // Normalization term
         
         update = (cfg.alpha / (arma::sqrt(E_g2) + 1e-6)) % grad;
 
