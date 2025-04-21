@@ -41,3 +41,22 @@ For more information and examples, see the help page:
 ?adaglm
 ```
 
+## Simulations
+
+Folder [Simulation studies](https://github.com/lyvqian/AdaGLM/tree/main/test/Simulation%20Studies) contains all the codes for simulations, pre-generated simulation data, and boxplots used in our report. Packages needed in this code are:
+- Matrix
+- tidyr
+- microbenchmark
+- dplyr
+- ggplot2
+
+## Real Data Analysis
+
+The datasets can be downloaded via the GEO website [GSE81861](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE81861). The 2 datasets needed in real data analysis are 'GSE81861_CRC_NM_all_cells_FPKM.csv.gz' and 'GSE81861_CRC_tumor_all_cells_FPKM.csv.gz'. We also provided the datasets on our GitHub: [Normal Mucosa](https://github.com/lyvqian/AdaGLM/blob/main/GSE81861_CRC_NM_all_cells_FPKM.csv.gz) and [Tumor](https://github.com/lyvqian/AdaGLM/blob/main/GSE81861_CRC_tumor_all_cells_FPKM.csv.gz).
+
+The codes for real data analysis can be found in [scTranscriptome.R](https://github.com/lyvqian/AdaGLM/blob/main/test/scTranscriptome.R). Packages needed in this code are:
+- microbenchmark
+- dplyr
+- ggplot2
+- sgd
+
